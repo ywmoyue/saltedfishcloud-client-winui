@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SfcApplication (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SfcApplication (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
