@@ -24,6 +24,11 @@
 
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="3.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0-preview.3.22175.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0-preview.3.22175.4" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-preview.3.22175.4" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0-preview.3.22175.4" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
     <Manifest Include="$(ApplicationManifest)" />

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flurl.Http;
 using SfcApplication.Models.Beans;
+using SfcApplication.Models.Configs;
 using SfcApplication.Models.Entities;
 
 namespace SfcApplication.Clients
@@ -13,6 +14,11 @@ namespace SfcApplication.Clients
     {
         private string m_baseUrl;
         private string m_token;
+
+        public UserClient(ClientConfig clientConfig)
+        {
+            m_baseUrl = clientConfig.BaseUrl;
+        }
 
         public async Task<string> GetToken(string user, string password)
         {
