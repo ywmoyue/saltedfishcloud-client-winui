@@ -17,15 +17,28 @@ namespace SfcApplication.Clients
 
         public UserClient(ClientConfig clientConfig)
         {
-            m_baseUrl = clientConfig.BaseUrl;
+            m_baseUrl = clientConfig.BaseUrl + "user/";
         }
 
         public async Task<string> GetToken(string user, string password)
         {
-            var result = await (m_baseUrl + $"token?user={user}&password={password}")
-                .PostAsync()
-                .ReceiveJson<BaseBean<string>>();
-            return result.Data;
+            try
+            {
+                var result = await (m_baseUrl + $"token?user={user}&passwd={password}")
+                    .PostUrlEncodedAsync(new
+                    {
+                        user=user,
+                        passwd=password
+                    })
+                    .ReceiveJson<BaseBean<string>>();
+                return result.Data;
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+            return null;
         }
 
         public async Task<User> GetUserInfo()

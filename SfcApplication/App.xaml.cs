@@ -18,7 +18,9 @@ using Windows.Foundation.Collections;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SfcApplication.Clients;
 using SfcApplication.Models.Configs;
+using SfcApplication.Views;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,11 +35,7 @@ namespace SfcApplication
         private readonly IHost m_host; 
         private IConfiguration m_configuration;
         private Window m_window;
-
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+        
         public App()
         {
             InitConfiguration();
@@ -59,23 +57,18 @@ namespace SfcApplication
         {
             var clientConfig = m_configuration.GetSection(nameof(ClientConfig)).Get<ClientConfig>();
             services.AddSingleton(clientConfig);
+            services.AddScoped<HelloClient>();
+            services.AddScoped<UserClient>();
+            services.AddScoped<DiskFileClient>();
             services.AddSingleton<MainWindow>();
+            services.AddSingleton<FileListPage>();
+            services.AddSingleton<LoginPage>();
         }
-
-        /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
-        /// will be used such as when the application is launched to open a specific file.
-        /// </summary>
-        /// <param name="args">Details about the launch request and process.</param>
+        
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             m_window = m_host.Services.GetService<MainWindow>();
             m_window?.Activate();
         }
-    //protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-    //{
-    //    m_window = new MainWindow();
-    //    m_window.Activate();
-    //}
 }
 }

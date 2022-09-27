@@ -3,11 +3,30 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SfcApplication"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="using:SfcApplication.ViewModels"
     mc:Ignorable="d">
-
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-    </StackPanel>
+    <Grid>
+        <Grid.DataContext>
+            <viewmodel:MainWindowViewModel x:Name="ViewModel"></viewmodel:MainWindowViewModel>
+        </Grid.DataContext>
+        <muxc:NavigationView x:Name="MainNavView"
+                             PaneDisplayMode="Left"
+                             SelectionChanged="MainNavView_OnSelectionChanged"
+                             MenuItemsSource="{Binding NavMenu, Mode=OneWay}"
+                             SelectedItem="{Binding NavMenuSelectedItem}"
+                             IsSettingsVisible="False"
+                             OpenPaneLength="200"
+                             IsRightTapEnabled="True">
+            <muxc:NavigationView.MenuItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" FontSize="12"></TextBlock>
+                </DataTemplate>
+            </muxc:NavigationView.MenuItemTemplate>
+            <Frame x:Name="MainFrame">
+            </Frame>
+        </muxc:NavigationView>
+    </Grid>
 </Window>
