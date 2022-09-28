@@ -29,8 +29,8 @@
             <TextBlock Grid.Row="1">用户名</TextBlock>
             <TextBlock Grid.Row="2" >密码</TextBlock>
             <Button Grid.Row="3" Name="LoginBtn" Click="LoginBtn_OnClick">登录</Button>
-            <TextBox Grid.Row="1" Grid.Column="1" Name="UserNameTextBox" MinWidth="200" Text="{Binding UserName}"></TextBox>
-            <PasswordBox Grid.Row="2" Grid.Column="1" Name="PasswdTextBox" MinWidth="200" Password="{Binding Password}"></PasswordBox>
+            <TextBox Grid.Row="1" Grid.Column="1" Name="UserNameTextBox" MinWidth="200" Text="{Binding UserName, Mode=TwoWay}"></TextBox>
+            <PasswordBox Grid.Row="2" Grid.Column="1" Name="PasswdTextBox" MinWidth="200" Password="{Binding Password, Mode=TwoWay}"></PasswordBox>
         </Grid>
     </StackPanel>
 

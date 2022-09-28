@@ -10,12 +10,12 @@ namespace SfcApplication.Models.Common
     {
         public int Id { get; set; } = 0;
         public string Name { get; set; }
-        public Type PageType { get; set; }
+        public string Path { get; set; }
         public NavMenuItem() { }
-        public NavMenuItem(string name, Type pageType, int id = 0)
+        public NavMenuItem(string name, string path, int id = 0)
         {
             Name = name;
-            PageType = pageType;
+            Path = path;
             Id = id;
         }
 

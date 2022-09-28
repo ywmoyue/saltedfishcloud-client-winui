@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SfcApplication.Clients;
 using SfcApplication.Models.Configs;
+using SfcApplication.Services;
 using SfcApplication.Views;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -60,6 +61,7 @@ namespace SfcApplication
             services.AddScoped<HelloClient>();
             services.AddScoped<UserClient>();
             services.AddScoped<DiskFileClient>();
+            services.AddSingleton<RouteService>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<FileListPage>();
             services.AddSingleton<LoginPage>();

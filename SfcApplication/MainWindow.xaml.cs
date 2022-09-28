@@ -15,6 +15,7 @@ using Windows.Foundation.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using SfcApplication.Clients;
 using SfcApplication.Models.Common;
+using SfcApplication.Services;
 using SfcApplication.Views;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,23 +31,23 @@ namespace SfcApplication
         private UserClient m_userClient;
         private DiskFileClient m_diskFileClient;
         private IServiceProvider m_serviceProvider;
+        private RouteService m_routeService;
 
-        public MainWindow(UserClient userClient, DiskFileClient diskFileClient, HelloClient helloClient, IServiceProvider serviceProvider)
+        public MainWindow(UserClient userClient, DiskFileClient diskFileClient, HelloClient helloClient ,RouteService routeService, IServiceProvider serviceProvider)
         {
             m_userClient = userClient;
             m_diskFileClient = diskFileClient;
             m_serviceProvider = serviceProvider;
+            m_routeService = routeService;
             this.InitializeComponent();
-            var fileListPage = serviceProvider.GetRequiredService<FileListPage>();
-            MainFrame.Content = fileListPage;
+            m_routeService.Init(MainFrame);
         }
 
         private void MainNavView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             var item = args.SelectedItem as NavMenuItem;
-            if (item.PageType == null) return;
-            var page = m_serviceProvider.GetRequiredService(item.PageType);
-            MainFrame.Content = page;
+            if (item.Path == null) return;
+            m_routeService.Push(item.Path);
         }
     }
 }

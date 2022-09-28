@@ -37,7 +37,7 @@ namespace SfcApplication.ViewModels
             m_navMenu.Clear();
             m_navMenu.Add(new NavMenuItem("公共网盘"));
             m_navMenu.Add(new NavMenuItem("私人网盘"));
-            m_navMenu.Add(new NavMenuItem("登陆", typeof(LoginPage)));
+            m_navMenu.Add(new NavMenuItem("登陆", "/login"));
             m_navMenu.Add(new NavMenuItem("注册"));
         }
     }

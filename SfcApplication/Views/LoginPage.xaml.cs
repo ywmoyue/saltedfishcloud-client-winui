@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using SfcApplication.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,18 +27,19 @@ namespace SfcApplication.Views
     internal sealed partial class LoginPage : Page
     {
         private UserClient m_userClient;
-        private IServiceProvider m_serviceProvider;
-        public LoginPage(UserClient userClient,IServiceProvider serviceProvider)
+        private RouteService m_routeService;
+        public LoginPage(UserClient userClient,RouteService routeService)
         {
             m_userClient = userClient;
-            m_serviceProvider = serviceProvider;
+            m_routeService = routeService;
             this.InitializeComponent();
         }
-
+        
         private async void LoginBtn_OnClick(object sender, RoutedEventArgs e)
         {
             var token=await m_userClient.GetToken(ViewModel.UserName, ViewModel.Password);
-            return;
+            // save token
+            m_routeService.Push("/fileList/public");
         }
     }
 }
