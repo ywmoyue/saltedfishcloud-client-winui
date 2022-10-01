@@ -22,6 +22,7 @@ using SfcApplication.Clients;
 using SfcApplication.Models.Configs;
 using SfcApplication.Services;
 using SfcApplication.Views;
+using AutoMapper;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -58,6 +59,8 @@ namespace SfcApplication
         {
             var clientConfig = m_configuration.GetSection(nameof(ClientConfig)).Get<ClientConfig>();
             services.AddSingleton(clientConfig);
+            services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(expression =>
+                expression.AddMaps(GetType().Assembly))));
             services.AddScoped<HelloClient>();
             services.AddScoped<UserClient>();
             services.AddScoped<DiskFileClient>();

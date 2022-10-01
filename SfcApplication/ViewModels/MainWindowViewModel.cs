@@ -35,7 +35,7 @@ namespace SfcApplication.ViewModels
         private void InitNavMenu()
         {
             m_navMenu.Clear();
-            m_navMenu.Add(new NavMenuItem("公共网盘"));
+            m_navMenu.Add(new NavMenuItem("公共网盘","/fileList/public"));
             m_navMenu.Add(new NavMenuItem("私人网盘"));
             m_navMenu.Add(new NavMenuItem("登陆", "/login"));
             m_navMenu.Add(new NavMenuItem("注册"));

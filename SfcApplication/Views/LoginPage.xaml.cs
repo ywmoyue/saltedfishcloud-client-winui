@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using SfcApplication.Models.Common;
 using SfcApplication.Services;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -24,7 +25,7 @@ namespace SfcApplication.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    internal sealed partial class LoginPage : Page
+    internal sealed partial class LoginPage : RoutePage
     {
         private UserClient m_userClient;
         private RouteService m_routeService;
