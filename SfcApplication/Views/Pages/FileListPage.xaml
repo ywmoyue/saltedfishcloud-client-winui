@@ -1,24 +1,19 @@
-﻿<common:RoutePage
-    x:Class="SfcApplication.Views.FileListPage"
+﻿<extensions:RoutePage
+    xmlns:extensions="using:SfcApplication.Extensions"
+    x:Class="SfcApplication.Views.Pages.FileListPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SfcApplication.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     xmlns:viewmodel="using:SfcApplication.ViewModels"
     xmlns:converters="using:SfcApplication.Converters"
-    xmlns:common="using:SfcApplication.Models.Common"
-    xmlns:entities="using:SfcApplication.Models.Entities"
     xmlns:mappers="using:SfcApplication.Models.Mappers">
 
     <Page.DataContext>
         <viewmodel:FileListPageViewModel x:Name="ViewModel"></viewmodel:FileListPageViewModel>
     </Page.DataContext>
-    <Page.Resources>
-        <converters:FileTypeImageConverter x:Key="FileTypeImageConverter"></converters:FileTypeImageConverter>
-    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -44,4 +39,4 @@
             </GridView.ItemTemplate>
         </GridView>
     </Grid>
-</common:RoutePage>
+</extensions:RoutePage>

@@ -1,14 +1,13 @@
-﻿<common:RoutePage
-    x:Class="SfcApplication.Views.LoginPage"
+﻿<extensions:RoutePage
+    xmlns:extensions="using:SfcApplication.Extensions"
+    x:Class="SfcApplication.Views.Pages.LoginPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SfcApplication.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    xmlns:viewmodel="using:SfcApplication.ViewModels"
-    xmlns:common="using:SfcApplication.Models.Common">
+    xmlns:viewmodel="using:SfcApplication.ViewModels">
 
     <Page.DataContext>
         <viewmodel:LoginPageViewModel x:Name="ViewModel"></viewmodel:LoginPageViewModel>
@@ -35,4 +34,4 @@
         </Grid>
     </StackPanel>
 
-</common:RoutePage>
+</extensions:RoutePage>

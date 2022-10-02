@@ -12,6 +12,7 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\Components\DownloadingView.xaml" />
     <None Remove="Views\DownloadPage.xaml" />
     <None Remove="Views\FileListPage.xaml" />
     <None Remove="Views\HomePage.xaml" />
@@ -51,20 +52,20 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Page Update="Views\DownloadPage.xaml">
+    <Page Update="Views\Components\DownloadingView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\LoginPage.xaml">
+    <Page Update="Views\Pages\DownloadPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\FileListPage.xaml">
+    <Page Update="Views\Pages\LoginPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\HomePage.xaml">
+    <Page Update="Views\Pages\FileListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
+    <Page Update="Views\Pages\HomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

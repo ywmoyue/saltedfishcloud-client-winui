@@ -1,0 +1,28 @@
+﻿<extensions:RoutePage
+    xmlns:extensions="using:SfcApplication.Extensions"
+    x:Class="SfcApplication.Views.Pages.DownloadPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:viewmodel="using:SfcApplication.ViewModels" xmlns:components="using:SfcApplication.Views.Components"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.DataContext>
+        <viewmodel:DownloadPageViewModel x:Name="ViewModel"></viewmodel:DownloadPageViewModel>
+    </Page.DataContext>
+    <Grid>
+        <TabView IsAddTabButtonVisible="False">
+            <TabView.TabItems>
+                <TabViewItem Header="正在下载" IsClosable="False">
+                    <TabViewItem.Content>
+                        <components:DownloadingView></components:DownloadingView>
+                    </TabViewItem.Content>
+                </TabViewItem>
+                <TabViewItem Header="已下载" IsClosable="False">
+                    
+                </TabViewItem>
+            </TabView.TabItems>
+        </TabView>
+    </Grid>
+</extensions:RoutePage>

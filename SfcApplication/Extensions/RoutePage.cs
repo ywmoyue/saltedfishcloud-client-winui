@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 
-namespace SfcApplication.Models.Common
+namespace SfcApplication.Extensions
 {
-    public class RoutePage:Page
+    public class RoutePage : Page
     {
         public virtual void OnNavigated(object query)
         {

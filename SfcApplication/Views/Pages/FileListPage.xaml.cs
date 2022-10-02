@@ -16,17 +16,17 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using AutoMapper;
 using SfcApplication.Clients;
-using SfcApplication.Models.Common;
 using SfcApplication.Models.Entities;
 using SfcApplication.Services;
 using Microsoft.UI.Xaml.Shapes;
 using SfcApplication.Models.Configs;
 using SfcApplication.Models.Mappers;
+using SfcApplication.Extensions;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SfcApplication.Views
+namespace SfcApplication.Views.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

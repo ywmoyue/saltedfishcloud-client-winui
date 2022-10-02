@@ -23,6 +23,7 @@ using SfcApplication.Models.Configs;
 using SfcApplication.Services;
 using SfcApplication.Views;
 using AutoMapper;
+using SfcApplication.Views.Pages;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -68,6 +69,7 @@ namespace SfcApplication
             services.AddSingleton<MainWindow>();
             services.AddSingleton<FileListPage>();
             services.AddSingleton<LoginPage>();
+            services.AddSingleton<DownloadPage>();
         }
         
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)

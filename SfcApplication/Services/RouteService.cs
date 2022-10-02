@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using SfcApplication.Extensions;
 using SfcApplication.Models.Common;
 using SfcApplication.Views;
+using SfcApplication.Views.Pages;
 
 namespace SfcApplication.Services
 {
