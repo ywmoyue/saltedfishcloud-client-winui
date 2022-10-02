@@ -20,6 +20,7 @@ using SfcApplication.Models.Common;
 using SfcApplication.Models.Entities;
 using SfcApplication.Services;
 using Microsoft.UI.Xaml.Shapes;
+using SfcApplication.Models.Configs;
 using SfcApplication.Models.Mappers;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -35,12 +36,14 @@ namespace SfcApplication.Views
         private DiskFileClient m_diskFileClient;
         private readonly RouteService m_routeService;
         private readonly IMapper m_mapper;
+        private readonly ClientConfig m_config;
 
-        public FileListPage(DiskFileClient diskFileClient, RouteService mRouteService, IMapper mMapper)
+        public FileListPage(DiskFileClient diskFileClient, RouteService mRouteService, IMapper mMapper, ClientConfig config)
         {
             m_diskFileClient = diskFileClient;
             m_routeService = mRouteService;
             m_mapper = mMapper;
+            m_config = config;
             this.InitializeComponent();
         }
 
@@ -71,7 +74,12 @@ namespace SfcApplication.Views
             }
             var diskFileInfos = await m_diskFileClient.GetFileList(path);
             var mappers = m_mapper.Map<List<DiskFileInfoMapper>>(diskFileInfos);
-            mappers.ForEach(x=>x.Paths=ViewModel.Paths.ToList());
+            mappers.ForEach(x=>
+            {
+                x.Paths = ViewModel.Paths.ToList();
+                x.BaseUrl = m_config.BaseUrl;
+                x.UserId = 0;
+            });
             ViewModel.DiskFileInfos = new ObservableCollection<DiskFileInfoMapper>(mappers);
         }
 

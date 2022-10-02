@@ -11,6 +11,8 @@ namespace SfcApplication.Models.Mappers
     [AutoMap(typeof(DiskFileInfo), ReverseMap = true)]
     internal class DiskFileInfoMapper:DiskFileInfo
     {
-        public List<string> Paths;
+        public List<string> Paths { get; set; }
+        public string BaseUrl { get; set; }
+        public int UserId { get; set; }
     }
 }

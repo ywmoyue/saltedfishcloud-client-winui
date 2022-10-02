@@ -34,7 +34,7 @@
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
                                Width = '100' Height = '100' 
-                               Source="{x:Bind converters:FileTypeImageConverter2.Convert(Suffix,Name,Dir,Paths)}"
+                               Source="{x:Bind converters:FileTypeImageConverter.Convert(Suffix,Name,Dir,Paths,Md5,BaseUrl,UserId)}"
                                AutomationProperties.AccessibilityView = 'Raw'>
 
                         </Image>

@@ -1,76 +1,75 @@
-﻿using Microsoft.UI.Xaml.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using SfcApplication.Models.Entities;
-using System.Collections.ObjectModel;
 
 namespace SfcApplication.Converters
 {
-    internal class FileTypeImageConverter : IValueConverter
+    internal class FileTypeImageConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public static ImageSource Convert(string suffix, string name,bool dir,List<string> paths,string md5,string baseUrl,int userId)
         {
-            var fileInfo = value as DiskFileInfo;
-            var paths = parameter as ObservableCollection<string>;
-            if (fileInfo.Dir)
+            var appPath = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            var iconDir = new DirectoryInfo($"{appPath}/Assets/icon");
+            if (dir)
             {
-                return "../Assets/icon/dir.png";
+                return GetBitmapImage($"{iconDir.FullName}/dir.png");
             }
 
-            switch (fileInfo.Suffix.ToLower())
+            switch (suffix.ToLower())
             {
                 case "apk":
-                    return "../Assets/icon/android.png";
+                    return GetBitmapImage($"{iconDir.FullName}/android.png");
                 case "mp3":
                 case "wav":
-                    return "../Assets/icon/audio.png";
+                    return GetBitmapImage($"{iconDir.FullName}/audio.png");
                 case "cs":
                 case "js":
                 case "java":
-                    return "../Assets/icon/code.png";
+                    return GetBitmapImage($"{iconDir.FullName}/code.png");
                 case "doc":
                 case "docx":
-                    return "../Assets/icon/doc.png";
+                    return GetBitmapImage($"{iconDir.FullName}/doc.png");
                 case "xls":
                 case "xlsx":
-                    return "../Assets/icon/excel.png";
+                    return GetBitmapImage($"{iconDir.FullName}/excel.png");
                 case "exe":
-                    return "../Assets/icon/exe.png";
+                    return GetBitmapImage($"{iconDir.FullName}/exe.png");
                 case "txt":
                 case "md":
-                    return "../Assets/icon/txt.png";
+                    return GetBitmapImage($"{iconDir.FullName}/txt.png");
                 case "iso":
-                    return "../Assets/icon/iso.png";
+                    return GetBitmapImage($"{iconDir.FullName}/iso.png");
                 case "jpg":
                 case "png":
-                    var path = "";
-                    for (var i = 1; i < paths.Count; i++)
-                    {
-                        path += $"{paths[i]}/";
-                    }
-                    var img = new BitmapImage(new Uri($"https://disk.xiaotao2333.top:344/api/diskFile/0/content/{path}{fileInfo.Name}"));
+                case "gif":
+                    var img = GetBitmapImage($"{baseUrl}resource/{userId}/thumbnail/{md5}?type={suffix}");
                     return img;
                 case "ppt":
                 case "pptx":
-                    return "../Assets/icon/ppt.png";
+                    return GetBitmapImage($"{iconDir.FullName}/ppt.png");
                 case "mp4":
-                    return "../Assets/icon/video.png";
+                    return GetBitmapImage($"{iconDir.FullName}/video.png");
                 case "rar":
                 case "zip":
                 case "gz":
                 case "7z":
-                    return "../Assets/icon/zipped.png";
+                    return GetBitmapImage($"{iconDir.FullName}/zipped.png");
             }
-            return "../Assets/icon/file.png";
+            return GetBitmapImage($"{iconDir.FullName}/file.png");
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        private static BitmapImage GetBitmapImage(string uri)
         {
-            throw new NotImplementedException();
+            return new BitmapImage(new Uri(uri));
         }
     }
 }
