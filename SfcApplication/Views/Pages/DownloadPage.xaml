@@ -5,7 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:viewmodel="using:SfcApplication.ViewModels" xmlns:components="using:SfcApplication.Views.Components"
+    xmlns:viewmodel="using:SfcApplication.ViewModels"
+    xmlns:components="using:SfcApplication.Views.Components"
+    xmlns:converters="using:SfcApplication.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.DataContext>
@@ -16,7 +18,7 @@
             <TabView.TabItems>
                 <TabViewItem Header="正在下载" IsClosable="False">
                     <TabViewItem.Content>
-                        <components:DownloadingView></components:DownloadingView>
+                        <components:DownloadingView DataContext="{x:Bind converters:DownloadItemConverter.GetDownloadingItem(ViewModel.DownloadItemList)}"></components:DownloadingView>
                     </TabViewItem.Content>
                 </TabViewItem>
                 <TabViewItem Header="已下载" IsClosable="False">

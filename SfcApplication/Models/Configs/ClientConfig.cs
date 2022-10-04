@@ -8,6 +8,9 @@ namespace SfcApplication.Models.Configs
 {
     internal class ClientConfig
     {
+        public string AppName { get; set; }
         public string BaseUrl { get; set; }
+        public OpenApiConfig OpenApi { get; set; }
+        public string DefaultDownloadPath { get; set; }
     }
 }

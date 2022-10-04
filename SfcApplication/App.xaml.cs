@@ -24,6 +24,9 @@ using SfcApplication.Services;
 using SfcApplication.Views;
 using AutoMapper;
 using SfcApplication.Views.Pages;
+using System.Threading.Tasks;
+using SfcApplication.HostedServices;
+using Downloader;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -44,6 +47,7 @@ namespace SfcApplication
             InitConfiguration();
             m_host = Host.CreateDefaultBuilder()
                 .ConfigureServices(ConfigureServices)
+                //.Start();
                 .Build();
             this.InitializeComponent();
         }
@@ -59,23 +63,36 @@ namespace SfcApplication
         private void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
             var clientConfig = m_configuration.GetSection(nameof(ClientConfig)).Get<ClientConfig>();
+            var downloadConfig = m_configuration.GetSection(nameof(DownloadConfiguration)).Get<DownloadConfiguration>();
             services.AddSingleton(clientConfig);
+            services.AddSingleton(downloadConfig);
             services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(expression =>
                 expression.AddMaps(GetType().Assembly))));
             services.AddScoped<HelloClient>();
             services.AddScoped<UserClient>();
             services.AddScoped<DiskFileClient>();
             services.AddSingleton<RouteService>();
+            services.AddScoped<LocalFileIOService>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<FileListPage>();
             services.AddSingleton<LoginPage>();
             services.AddSingleton<DownloadPage>();
+            services.AddSingleton<DownloadHostedService>();
+            services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<DownloadHostedService>());
         }
         
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            // start hostedServices
+            StartHostedServices(m_host.Services).ContinueWith(task => Console.WriteLine(task.Exception));
+            // start window
             m_window = m_host.Services.GetService<MainWindow>();
             m_window?.Activate();
+        }
+
+        private async Task StartHostedServices(IServiceProvider services)
+        {
+            await services.GetRequiredService<DownloadHostedService>().StartAsync(System.Threading.CancellationToken.None);
         }
 }
 }

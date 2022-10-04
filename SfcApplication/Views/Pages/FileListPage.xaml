@@ -9,19 +9,36 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     xmlns:viewmodel="using:SfcApplication.ViewModels"
     xmlns:converters="using:SfcApplication.Converters"
-    xmlns:mappers="using:SfcApplication.Models.Mappers">
+    xmlns:mappers="using:SfcApplication.Models.Mappers"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity">
 
     <Page.DataContext>
         <viewmodel:FileListPageViewModel x:Name="ViewModel"></viewmodel:FileListPageViewModel>
     </Page.DataContext>
 
+    <Page.Resources>
+        <MenuFlyout x:Key="FileListRightClickMenu" x:Name="FileListRightClickMenu">
+            <MenuFlyoutItem 
+                x:Name="DownloadBtn"
+                Click="DownloadBtn_Click"
+                Text="下载"/>
+        </MenuFlyout>
+    </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <BreadcrumbBar x:Name="PathBreadcrumb" ItemsSource="{Binding Paths ,Mode=TwoWay}" ItemClicked="PathBreadcrumb_OnItemClicked"/>
-        <GridView x:Name="FileInfoGridView" ItemsSource="{Binding DiskFileInfos}"  CanDragItems="True" SelectionMode="Extended" Grid.Row="1">
+        <GridView 
+            x:Name="FileInfoGridView" 
+            ItemsSource="{Binding DiskFileInfos}"  
+            CanDragItems="True" 
+            SelectionMode="Extended" 
+            Grid.Row="1" 
+            RightTapped="FileInfoGridView_RightTapped">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="mappers:DiskFileInfoMapper">
                     <StackPanel Orientation="Vertical" Width="150" Height="150" Name="FileItemPanel" DoubleTapped="FileItemPanel_OnDoubleTapped">
@@ -37,6 +54,11 @@
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
+            <Interactivity:Interaction.Behaviors>
+                <Core:EventTriggerBehavior EventName="SelectionChanged">
+                    <Core:InvokeCommandAction Command="{x:Bind ViewModel.SetSelectedDiskFileInfos}" CommandParameter="{x:Bind FileInfoGridView.SelectedItems,Mode=OneWay}"/>
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
         </GridView>
     </Grid>
 </extensions:RoutePage>

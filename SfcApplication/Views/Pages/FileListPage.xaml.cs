@@ -22,6 +22,7 @@ using Microsoft.UI.Xaml.Shapes;
 using SfcApplication.Models.Configs;
 using SfcApplication.Models.Mappers;
 using SfcApplication.Extensions;
+using SfcApplication.HostedServices;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -37,14 +38,16 @@ namespace SfcApplication.Views.Pages
         private readonly RouteService m_routeService;
         private readonly IMapper m_mapper;
         private readonly ClientConfig m_config;
+        private readonly DownloadHostedService m_downloadHostedService;
 
-        public FileListPage(DiskFileClient diskFileClient, RouteService mRouteService, IMapper mMapper, ClientConfig config)
+        public FileListPage(DiskFileClient diskFileClient, RouteService mRouteService, IMapper mMapper, ClientConfig config, DownloadHostedService downloadHostedService)
         {
             m_diskFileClient = diskFileClient;
             m_routeService = mRouteService;
             m_mapper = mMapper;
             m_config = config;
             this.InitializeComponent();
+            m_downloadHostedService = downloadHostedService;
         }
 
         public override async void OnNavigated(object query)
@@ -67,11 +70,7 @@ namespace SfcApplication.Views.Pages
 
         internal async Task InitData()
         {
-            var path = "";
-            for (var i = 1; i < ViewModel.Paths.Count; i++)
-            {
-                path += $"{ViewModel.Paths[i]}/";
-            }
+            var path = ViewModel.Paths.GetFilePathExceptRoot();
             var diskFileInfos = await m_diskFileClient.GetFileList(path);
             var mappers = m_mapper.Map<List<DiskFileInfoMapper>>(diskFileInfos);
             mappers.ForEach(x=>
@@ -85,7 +84,7 @@ namespace SfcApplication.Views.Pages
 
         private async void FileItemPanel_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            var originalSource = e.OriginalSource as FrameworkElement;
+            var originalSource = sender as FrameworkElement;
             
             var fileInfo = originalSource.DataContext as DiskFileInfo;
             if (fileInfo.Dir)
@@ -103,6 +102,17 @@ namespace SfcApplication.Views.Pages
                 ViewModel.Paths.RemoveAt(i);
             }
             await InitData();
+        }
+
+        private void FileInfoGridView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FileListRightClickMenu.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
+        }
+
+        private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var fileInfo = ViewModel.SelectedDiskFileInfos.FirstOrDefault();
+            await m_downloadHostedService.Download(fileInfo);
         }
     }
 }

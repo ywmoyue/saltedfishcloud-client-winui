@@ -9,9 +9,9 @@
     xmlns:common="using:SfcApplication.Models.Common" 
     xmlns:converters="using:SfcApplication.Converters"
     mc:Ignorable="d">
-    <UserControl.DataContext>
+    <!--<UserControl.DataContext>
         <viewmodel:DownloadingViewModel x:Name="ViewModel"></viewmodel:DownloadingViewModel>
-    </UserControl.DataContext>
+    </UserControl.DataContext>-->
     <Grid>
         <ListView x:Name="DownloadingListView" ItemsSource="{Binding DownloadItemList}">
             <ListView.ItemTemplate>

@@ -26,17 +26,17 @@ namespace SfcApplication.Views.Components
         public DownloadingView()
         {
             this.InitializeComponent();
-            ViewModel.DownloadItemList = new ObservableCollection<DownloadItem>();
-            ViewModel.DownloadItemList.Add(new DownloadItem()
-            {
-                Id=0,
-                DiskFileInfo=new DiskFileInfo()
-                {
-                    Name="test",
-                    Size=50000,
-                    Suffix="txt"
-                }
-            });
+            //ViewModel.DownloadItemList = new ObservableCollection<DownloadItem>();
+            //ViewModel.DownloadItemList.Add(new DownloadItem()
+            //{
+            //    Id=0,
+            //    DiskFileInfo=new DiskFileInfo()
+            //    {
+            //        Name="test",
+            //        Size=50000,
+            //        Suffix="txt"
+            //    }
+            //});
         }
     }
 }
