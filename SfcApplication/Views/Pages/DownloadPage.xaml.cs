@@ -17,6 +17,7 @@ using SfcApplication.HostedServices;
 using SfcApplication.Models.Common;
 using System.Collections.ObjectModel;
 using Windows.UI.Core;
+using SfcApplication.Views.Components;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,9 +29,12 @@ namespace SfcApplication.Views.Pages
     /// </summary>
     public sealed partial class DownloadPage : RoutePage
     {
-        public DownloadPage()
+        DownloadingView m_downloadingView;
+        public DownloadPage(DownloadingView downloadingView)
         {
             this.InitializeComponent();
+            m_downloadingView = downloadingView;
+            DownloadingTab.Content = m_downloadingView;
         }
     }
 }

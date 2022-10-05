@@ -27,6 +27,7 @@ using SfcApplication.Views.Pages;
 using System.Threading.Tasks;
 using SfcApplication.HostedServices;
 using Downloader;
+using SfcApplication.Views.Components;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -77,6 +78,7 @@ namespace SfcApplication
             services.AddSingleton<FileListPage>();
             services.AddSingleton<LoginPage>();
             services.AddSingleton<DownloadPage>();
+            services.AddScoped<DownloadingView>();
             services.AddSingleton<DownloadHostedService>();
             services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<DownloadHostedService>());
         }

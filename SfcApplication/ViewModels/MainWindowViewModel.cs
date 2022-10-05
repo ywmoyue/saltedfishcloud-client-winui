@@ -11,35 +11,24 @@ namespace SfcApplication.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
-        NavMenuItem m_navMenuSelectedItem;
-        ObservableCollection<NavMenuItem> m_navMenu;
+        public NavMenuItem NavMenuSelectedItem { get; set; }
 
-        public NavMenuItem NavMenuSelectedItem
-        {
-            get => m_navMenuSelectedItem;
-            set => Set(ref m_navMenuSelectedItem, value);
-        }
-
-        public ObservableCollection<NavMenuItem> NavMenu
-        {
-            get => m_navMenu;
-            set => Set(ref m_navMenu, value);
-        }
+        public ObservableCollection<NavMenuItem> NavMenu { get; set; }
 
         public MainWindowViewModel()
         {
-            m_navMenu = new ObservableCollection<NavMenuItem>();
+            NavMenu = new ObservableCollection<NavMenuItem>();
             InitNavMenu();
         }
 
         private void InitNavMenu()
         {
-            m_navMenu.Clear();
-            m_navMenu.Add(new NavMenuItem("公共网盘","/fileList/public"));
-            m_navMenu.Add(new NavMenuItem("私人网盘"));
-            m_navMenu.Add(new NavMenuItem("登陆", "/login"));
-            m_navMenu.Add(new NavMenuItem("注册"));
-            m_navMenu.Add(new NavMenuItem("下载管理","/download"));
+            NavMenu.Clear();
+            NavMenu.Add(new NavMenuItem("公共网盘","/fileList/public"));
+            NavMenu.Add(new NavMenuItem("私人网盘"));
+            NavMenu.Add(new NavMenuItem("登陆", "/login"));
+            NavMenu.Add(new NavMenuItem("注册"));
+            NavMenu.Add(new NavMenuItem("下载管理","/download"));
         }
     }
 }

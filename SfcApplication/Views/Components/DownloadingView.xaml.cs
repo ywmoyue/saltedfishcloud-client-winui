@@ -39,7 +39,12 @@ namespace SfcApplication.Views.Components
         {
             DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
-                ViewModel.DownloadItemList.FirstOrDefault(x => x.Id == e.Id).DownloadedSize = e.DownloadedSize;
+                var item = ViewModel.DownloadItemList.FirstOrDefault(x => x.Id == e.Id);
+                item.DownloadedSize = e.DownloadedSize;
+                var index = ViewModel.DownloadItemList.IndexOf(item);
+                //ViewModel.DownloadItemList.RemoveAt(index);
+                //ViewModel.DownloadItemList.Insert(index, item);
+                //ViewModel.UpdateDownloadItemListChild(ViewModel.DownloadItemList.IndexOf(item));
             });
         }
     }

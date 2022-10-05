@@ -13,7 +13,7 @@
         <viewmodel:DownloadingViewModel x:Name="ViewModel"></viewmodel:DownloadingViewModel>
     </UserControl.DataContext>
     <Grid>
-        <ListView x:Name="DownloadingListView" ItemsSource="{Binding Mode=TwoWay}">
+        <ListView x:Name="DownloadingListView" ItemsSource="{Binding DownloadItemList, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="common:DownloadItem">
                     <Grid>
@@ -45,7 +45,7 @@
                         </Grid>
                         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
                             <!--已下载大小/总大小-->
-                            <TextBlock Text="{x:Bind DownloadedSize}"></TextBlock>
+                            <TextBlock Text="{x:Bind DownloadedSize,Mode=TwoWay}"></TextBlock>
                             <TextBlock Text="/"></TextBlock>
                             <TextBlock Text="{x:Bind DiskFileInfo.Size}"></TextBlock>
                         </StackPanel>

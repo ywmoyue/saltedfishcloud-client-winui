@@ -1,5 +1,8 @@
-﻿using SfcApplication.Models.Entities;
+﻿using Newtonsoft.Json;
+using PropertyChanged;
+using SfcApplication.Models.Entities;
 using SfcApplication.Models.Enums;
+using SfcApplication.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Common
 {
-    public class DownloadItem : INotifyPropertyChanged
+    public class DownloadItem : BaseViewModel
     {
         public int Id { get; set; }
         public DiskFileInfo DiskFileInfo { get; set; }
@@ -17,7 +20,5 @@ namespace SfcApplication.Models.Common
         public DateTimeOffset DownloadedTime { get; set; }
         public long DownloadedSize { get; set; }
         public DownloadStatus Status { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

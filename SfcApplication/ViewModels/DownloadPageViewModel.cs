@@ -11,16 +11,7 @@ namespace SfcApplication.ViewModels
 {
     public class DownloadPageViewModel : BaseViewModel
     {
-
-        private ObservableCollection<DownloadItem> m_downloadItemList;
-        public ObservableCollection<DownloadItem> DownloadItemList
-        {
-            get => m_downloadItemList;
-            set {
-                Set(ref m_downloadItemList, value);
-                Set("DownloadingItemList");
-            }
-        }
+        public ObservableCollection<DownloadItem> DownloadItemList { get; set; }
 
         public ObservableCollection<DownloadItem> DownloadingItemList
         {
@@ -30,12 +21,6 @@ namespace SfcApplication.ViewModels
         public DownloadPageViewModel()
         {
             DownloadItemList = new ObservableCollection<DownloadItem>();
-            DownloadingItemList.CollectionChanged += DownloadingItemList_CollectionChanged;
-        }
-
-        public void DownloadingItemList_CollectionChanged(object sender=null, System.Collections.Specialized.NotifyCollectionChangedEventArgs e=null)
-        {
-            Set("DownloadingItemList");
         }
     }
 }

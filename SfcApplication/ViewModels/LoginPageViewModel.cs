@@ -8,19 +8,8 @@ namespace SfcApplication.ViewModels
 {
     public class LoginPageViewModel:BaseViewModel
     {
-        private string m_userName;
-        private string m_password;
+        public string UserName { get; set; }
 
-        public string UserName
-        {
-            get =>  m_userName; 
-            set => Set(ref m_userName, value); 
-        }
-
-        public string Password
-        {
-            get => m_password; 
-            set => Set(ref m_password, value); 
-        }
+        public string Password { get; set; }
     }
 }

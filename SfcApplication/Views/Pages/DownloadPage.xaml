@@ -16,10 +16,7 @@
     <Grid>
         <TabView IsAddTabButtonVisible="False">
             <TabView.TabItems>
-                <TabViewItem Header="正在下载" IsClosable="False">
-                    <TabViewItem.Content>
-                        <components:DownloadingView></components:DownloadingView>
-                    </TabViewItem.Content>
+                <TabViewItem Header="正在下载" IsClosable="False" x:Name="DownloadingTab">
                 </TabViewItem>
                 <TabViewItem Header="已下载" IsClosable="False">
                     

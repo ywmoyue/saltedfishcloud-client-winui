@@ -13,33 +13,18 @@ namespace SfcApplication.ViewModels
 {
     public class FileListPageViewModel : BaseViewModel
     {
-        private ObservableCollection<DiskFileInfoMapper> m_diskFileInfos;
-        private ObservableCollection<string> m_paths;
-        private List<DiskFileInfoMapper> m_selectedDiskFileInfos;
-        public ObservableCollection<DiskFileInfoMapper> DiskFileInfos
-        {
-            get => m_diskFileInfos;
-            set => Set(ref m_diskFileInfos, value);
-        }
+        public ObservableCollection<DiskFileInfoMapper> DiskFileInfos { get; set; }
 
-        public ObservableCollection<string> Paths
-        {
-            get => m_paths;
-            set => Set(ref m_paths, value);
-        }
+        public ObservableCollection<string> Paths { get; set; }
 
-        public List<DiskFileInfoMapper> SelectedDiskFileInfos
-        {
-            get => m_selectedDiskFileInfos;
-            set => Set(ref m_selectedDiskFileInfos, value);
-        }
+        public List<DiskFileInfoMapper> SelectedDiskFileInfos { get; set; }
 
         public ICommand SetSelectedDiskFileInfos
         {
             get
             {
                 return new SelectedCommand((s) => 
-                this.SelectedDiskFileInfos=s.ToList()
+                    SelectedDiskFileInfos=s.ToList()
                 );
             }
         }
