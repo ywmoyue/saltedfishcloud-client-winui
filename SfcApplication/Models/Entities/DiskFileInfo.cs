@@ -7,7 +7,7 @@ using SfcApplication.Models.Enums;
 
 namespace SfcApplication.Models.Entities
 {
-    internal class DiskFileInfo
+    public class DiskFileInfo
     {
         public int Uid { get; set; }
 

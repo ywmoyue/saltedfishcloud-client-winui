@@ -8,6 +8,7 @@ using SfcApplication.Models.Mappers;
 using SfcApplication.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,7 +17,7 @@ using Windows.Storage;
 
 namespace SfcApplication.HostedServices
 {
-    internal class DownloadHostedService : IHostedService
+    public class DownloadHostedService : IHostedService
     {
         private readonly ClientConfig m_clientConfig;
         private readonly DownloadConfiguration m_downloadConfig;
@@ -24,8 +25,17 @@ namespace SfcApplication.HostedServices
         private List<DownloadTask> m_downloadTasks;
 
         public List<DownloadItem> DownloadItems { get => m_downloadTasks.Select(x => x.DownloadItem).ToList(); }
+        public List<DownloadItem> DownloadingItems
+        {
+            get => m_downloadTasks.Select(x => x.DownloadItem).Where(x => x.Status != Models.Enums.DownloadStatus.Downloaded).ToList();
+        }
+        public List<DownloadItem> DownloadedItems
+        {
+            get => m_downloadTasks.Select(x => x.DownloadItem).Where(x => x.Status == Models.Enums.DownloadStatus.Downloaded).ToList();
+        }
 
         public event EventHandler<List<DownloadItem>> DownloadItemsChange;
+        public event EventHandler<DownloadItem> DownloadingItemChange;
 
         public DownloadHostedService(ClientConfig clientConfig, DownloadConfiguration downloadConfig, LocalFileIOService localFileIOService)
         {
@@ -76,15 +86,16 @@ namespace SfcApplication.HostedServices
             downloader.DownloadProgressChanged += (sender, e) =>
             {
                 downloadItem.DownloadedSize = e.ReceivedBytesSize;
-                DownloadItemsChange?.Invoke(this, DownloadItems);
+                DownloadingItemChange?.Invoke(this, downloadItem);
             };
             var downloadTask = new DownloadTask()
             {
                 Downloader = downloader,
                 DownloadItem = downloadItem,
-                DownloadPackage=downloader.Package
+                DownloadPackage = downloader.Package
             };
             m_downloadTasks.Add(downloadTask);
+            DownloadItemsChange?.Invoke(this, DownloadItems);
             await WriteTaskToFile();
             await downloader.StartAsync();
         }

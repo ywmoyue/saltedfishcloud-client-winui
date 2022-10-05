@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Common
 {
-    internal class DownloadTask
+    public class DownloadTask
     {
         public DownloadItem DownloadItem { get; set; }
         [JsonIgnore]

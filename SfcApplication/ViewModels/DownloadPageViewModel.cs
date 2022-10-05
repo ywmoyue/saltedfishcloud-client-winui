@@ -9,14 +9,33 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.ViewModels
 {
-    internal class DownloadPageViewModel:BaseViewModel
+    public class DownloadPageViewModel : BaseViewModel
     {
 
         private ObservableCollection<DownloadItem> m_downloadItemList;
         public ObservableCollection<DownloadItem> DownloadItemList
         {
             get => m_downloadItemList;
-            set => Set(ref m_downloadItemList, value);
+            set {
+                Set(ref m_downloadItemList, value);
+                Set("DownloadingItemList");
+            }
+        }
+
+        public ObservableCollection<DownloadItem> DownloadingItemList
+        {
+            get => new ObservableCollection<DownloadItem>(DownloadItemList.Where(x => x.Status != Models.Enums.DownloadStatus.Downloaded));
+        }
+
+        public DownloadPageViewModel()
+        {
+            DownloadItemList = new ObservableCollection<DownloadItem>();
+            DownloadingItemList.CollectionChanged += DownloadingItemList_CollectionChanged;
+        }
+
+        public void DownloadingItemList_CollectionChanged(object sender=null, System.Collections.Specialized.NotifyCollectionChangedEventArgs e=null)
+        {
+            Set("DownloadingItemList");
         }
     }
 }

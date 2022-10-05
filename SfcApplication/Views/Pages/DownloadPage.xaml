@@ -18,7 +18,7 @@
             <TabView.TabItems>
                 <TabViewItem Header="正在下载" IsClosable="False">
                     <TabViewItem.Content>
-                        <components:DownloadingView DataContext="{x:Bind converters:DownloadItemConverter.GetDownloadingItem(ViewModel.DownloadItemList)}"></components:DownloadingView>
+                        <components:DownloadingView></components:DownloadingView>
                     </TabViewItem.Content>
                 </TabViewItem>
                 <TabViewItem Header="已下载" IsClosable="False">

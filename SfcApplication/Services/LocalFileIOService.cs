@@ -10,7 +10,7 @@ using Windows.Storage;
 
 namespace SfcApplication.Services
 {
-    internal class LocalFileIOService
+    public class LocalFileIOService
     {
         private readonly ClientConfig m_clientConfig;
         private readonly StorageFolder m_localFolder;

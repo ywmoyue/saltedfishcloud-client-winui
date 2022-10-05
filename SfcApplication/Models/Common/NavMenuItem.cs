@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Common
 {
-    internal class NavMenuItem
+    public class NavMenuItem
     {
         public int Id { get; set; } = 0;
         public string Name { get; set; }

@@ -8,7 +8,7 @@ using SfcApplication.Models.Configs;
 
 namespace SfcApplication.Clients
 {
-    internal class HelloClient
+    public class HelloClient
     {
         private string m_baseUrl;
 

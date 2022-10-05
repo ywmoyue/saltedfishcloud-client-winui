@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Common
 {
-    internal class RouteItem
+    public class RouteItem
     {
         public string Path { get; set; }
         public string Name { get; set; }

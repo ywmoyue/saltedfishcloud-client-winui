@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.ViewModels
 {
-    internal class DownloadingViewModel:BaseViewModel
+    public class DownloadingViewModel:BaseViewModel
     {
         private ObservableCollection<DownloadItem> m_downloadItemList;
         public ObservableCollection<DownloadItem> DownloadItemList

@@ -9,7 +9,7 @@ using SfcApplication.Views;
 
 namespace SfcApplication.ViewModels
 {
-    internal class MainWindowViewModel : BaseViewModel
+    public class MainWindowViewModel : BaseViewModel
     {
         NavMenuItem m_navMenuSelectedItem;
         ObservableCollection<NavMenuItem> m_navMenu;

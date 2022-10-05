@@ -25,7 +25,7 @@ namespace SfcApplication.Views.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    internal sealed partial class LoginPage : RoutePage
+    public sealed partial class LoginPage : RoutePage
     {
         private UserClient m_userClient;
         private RouteService m_routeService;

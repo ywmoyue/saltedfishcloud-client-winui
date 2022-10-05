@@ -11,7 +11,7 @@ using SfcApplication.Models.Entities;
 
 namespace SfcApplication.Clients
 {
-    internal class UserClient
+    public class UserClient
     {
         private string m_token;
         private ClientConfig m_clientConfig;

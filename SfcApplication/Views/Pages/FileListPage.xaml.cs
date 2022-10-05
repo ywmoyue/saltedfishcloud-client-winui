@@ -32,7 +32,7 @@ namespace SfcApplication.Views.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    internal sealed partial class FileListPage : RoutePage
+    public sealed partial class FileListPage : RoutePage
     {
         private DiskFileClient m_diskFileClient;
         private readonly RouteService m_routeService;
@@ -68,7 +68,7 @@ namespace SfcApplication.Views.Pages
             await InitData();
         }
 
-        internal async Task InitData()
+        public async Task InitData()
         {
             var path = ViewModel.Paths.GetFilePathExceptRoot();
             var diskFileInfos = await m_diskFileClient.GetFileList(path);

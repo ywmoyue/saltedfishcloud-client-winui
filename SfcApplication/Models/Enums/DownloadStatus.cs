@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Enums
 {
-    internal enum DownloadStatus
+    public enum DownloadStatus
     {
         NotStarted,//未开始
         Paused,//暂停中

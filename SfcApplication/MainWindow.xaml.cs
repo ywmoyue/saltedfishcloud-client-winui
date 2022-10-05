@@ -26,7 +26,7 @@ namespace SfcApplication
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    internal sealed partial class MainWindow : Window
+    public sealed partial class MainWindow : Window
     {
         private UserClient m_userClient;
         private DiskFileClient m_diskFileClient;

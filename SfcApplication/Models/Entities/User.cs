@@ -8,7 +8,7 @@ using SfcApplication.Models.Enums;
 
 namespace SfcApplication.Models.Entities
 {
-    internal class User
+    public class User
     {
         public int Id { get; set; }
 

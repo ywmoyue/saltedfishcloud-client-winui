@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Extensions
 {
-    internal static class StringExtension
+    public static class StringExtension
     {
         public static string ReplaceParameter(this string source,string name,string value)
         {

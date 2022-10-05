@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Extensions
 {
-    internal static class IEnumerableExtension
+    public static class IEnumerableExtension
     {
         public static string GetFilePathExceptRoot(this IEnumerable<string> filePaths)
         {

@@ -11,7 +11,7 @@ using SfcApplication.Models.Mappers;
 
 namespace SfcApplication.ViewModels
 {
-    internal class FileListPageViewModel : BaseViewModel
+    public class FileListPageViewModel : BaseViewModel
     {
         private ObservableCollection<DiskFileInfoMapper> m_diskFileInfos;
         private ObservableCollection<string> m_paths;

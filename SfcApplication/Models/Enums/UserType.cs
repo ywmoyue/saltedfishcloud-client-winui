@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Enums
 {
-    internal enum UserType
+    public enum UserType
     {
         TypeCommon,
         TypeAdmin

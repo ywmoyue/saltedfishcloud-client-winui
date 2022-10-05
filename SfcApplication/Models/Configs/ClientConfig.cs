@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Configs
 {
-    internal class ClientConfig
+    public class ClientConfig
     {
         public string AppName { get; set; }
         public string BaseUrl { get; set; }

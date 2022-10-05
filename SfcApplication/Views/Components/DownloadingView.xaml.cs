@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using SfcApplication.Extensions;
+using SfcApplication.HostedServices;
 using SfcApplication.Models.Common;
 using SfcApplication.Models.Entities;
 using System;
@@ -23,20 +25,22 @@ namespace SfcApplication.Views.Components
 {
     public sealed partial class DownloadingView : UserControl
     {
-        public DownloadingView()
+        private readonly DownloadHostedService m_downloadHostedService;
+        public DownloadingView(DownloadHostedService downloadHostedService)
         {
             this.InitializeComponent();
-            //ViewModel.DownloadItemList = new ObservableCollection<DownloadItem>();
-            //ViewModel.DownloadItemList.Add(new DownloadItem()
-            //{
-            //    Id=0,
-            //    DiskFileInfo=new DiskFileInfo()
-            //    {
-            //        Name="test",
-            //        Size=50000,
-            //        Suffix="txt"
-            //    }
-            //});
+            m_downloadHostedService = downloadHostedService;
+            ViewModel.DownloadItemList.AddRange(m_downloadHostedService.DownloadingItems);
+
+            m_downloadHostedService.DownloadingItemChange += DownloadHostedService_DownloadingItemChange;
+        }
+
+        private void DownloadHostedService_DownloadingItemChange(object sender, DownloadItem e)
+        {
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+            {
+                ViewModel.DownloadItemList.FirstOrDefault(x => x.Id == e.Id).DownloadedSize = e.DownloadedSize;
+            });
         }
     }
 }

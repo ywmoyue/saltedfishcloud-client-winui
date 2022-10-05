@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.ViewModels
 {
-    internal class LoginPageViewModel:BaseViewModel
+    public class LoginPageViewModel:BaseViewModel
     {
         private string m_userName;
         private string m_password;

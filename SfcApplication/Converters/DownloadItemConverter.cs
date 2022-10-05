@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Converters
 {
-    internal class DownloadItemConverter
+    public class DownloadItemConverter
     {
         public static DownloadingViewModel GetDownloadingItem(IList<DownloadItem> source)
         {

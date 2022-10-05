@@ -13,7 +13,7 @@ using SfcApplication.Models.Entities;
 
 namespace SfcApplication.Converters
 {
-    internal class FileTypeImageConverter
+    public class FileTypeImageConverter
     {
         public static ImageSource Convert(string suffix, string name,bool dir,List<string> paths,string md5,string baseUrl,int userId)
         {

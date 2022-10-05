@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Configs
 {
-    internal class OpenApiConfig
+    public class OpenApiConfig
     {
         public string DownloadFile { get; set; }
         public string GetUserToken { get; set; }

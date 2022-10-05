@@ -12,7 +12,7 @@ using SfcApplication.Views.Pages;
 
 namespace SfcApplication.Services
 {
-    internal class RouteService
+    public class RouteService
     {
         private Frame m_frame;
         private List<RouteItem> m_routes;
