@@ -78,7 +78,7 @@ namespace SfcApplication
             services.AddSingleton<FileListPage>();
             services.AddSingleton<LoginPage>();
             services.AddSingleton<DownloadPage>();
-            services.AddScoped<DownloadingView>();
+            //services.AddScoped<DownloadingView>();
             services.AddSingleton<DownloadHostedService>();
             services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<DownloadHostedService>());
         }

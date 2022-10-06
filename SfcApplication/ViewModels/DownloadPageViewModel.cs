@@ -1,4 +1,6 @@
-﻿using SfcApplication.Models.Common;
+﻿using Microsoft.UI.Dispatching;
+using PropertyChanged;
+using SfcApplication.Models.Common;
 using SfcApplication.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -11,16 +13,28 @@ namespace SfcApplication.ViewModels
 {
     public class DownloadPageViewModel : BaseViewModel
     {
-        public ObservableCollection<DownloadItem> DownloadItemList { get; set; }
+        public DispatcherQueue DispatcherQueue { get; set; }
+        public ObservableCollection<DownloadItemViewModel> DownloadItemList { get; set; }
 
-        public ObservableCollection<DownloadItem> DownloadingItemList
+        [DependsOn("DownloadItemList")]
+        public ObservableCollection<DownloadItemViewModel> DownloadingItemList
         {
-            get => new ObservableCollection<DownloadItem>(DownloadItemList.Where(x => x.Status != Models.Enums.DownloadStatus.Downloaded));
+            get => new ObservableCollection<DownloadItemViewModel>(DownloadItemList.Where(x => x.Status != Models.Enums.DownloadStatus.Downloaded));
         }
 
         public DownloadPageViewModel()
         {
-            DownloadItemList = new ObservableCollection<DownloadItem>();
+            DownloadItemList = new ObservableCollection<DownloadItemViewModel>();
+            DownloadItemList.CollectionChanged += DownloadItemList_CollectionChanged;
+        }
+
+        private void DownloadItemList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (DispatcherQueue == null) return;
+            DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+            {
+                Set("DownloadingItemList");
+            });
         }
     }
 }

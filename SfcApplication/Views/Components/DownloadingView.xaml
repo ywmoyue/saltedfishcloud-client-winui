@@ -9,13 +9,10 @@
     xmlns:common="using:SfcApplication.Models.Common" 
     xmlns:converters="using:SfcApplication.Converters"
     mc:Ignorable="d">
-    <UserControl.DataContext>
-        <viewmodel:DownloadingViewModel x:Name="ViewModel"></viewmodel:DownloadingViewModel>
-    </UserControl.DataContext>
     <Grid>
-        <ListView x:Name="DownloadingListView" ItemsSource="{Binding DownloadItemList, Mode=TwoWay}">
+        <ListView x:Name="DownloadingListView" ItemsSource="{x:Bind DataContext,Mode=OneWay}">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="common:DownloadItem">
+                <DataTemplate x:DataType="viewmodel:DownloadItemViewModel">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -45,7 +42,7 @@
                         </Grid>
                         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
                             <!--已下载大小/总大小-->
-                            <TextBlock Text="{x:Bind DownloadedSize,Mode=TwoWay}"></TextBlock>
+                            <TextBlock Text="{x:Bind DownloadedSize,Mode=OneWay}"></TextBlock>
                             <TextBlock Text="/"></TextBlock>
                             <TextBlock Text="{x:Bind DiskFileInfo.Size}"></TextBlock>
                         </StackPanel>

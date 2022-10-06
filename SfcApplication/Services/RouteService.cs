@@ -17,6 +17,7 @@ namespace SfcApplication.Services
         private Frame m_frame;
         private List<RouteItem> m_routes;
         public RouteItem CurrentRoute { get; private set; }
+        public event EventHandler<RouteItem> RouteChanged;
         private IServiceProvider m_serviceProvider;
 
         public RouteService(IServiceProvider serviceProvider)
@@ -39,6 +40,7 @@ namespace SfcApplication.Services
             var page = m_serviceProvider.GetRequiredService(route.PageType) as RoutePage;
             m_frame.Content = page;
             CurrentRoute = route;
+            RouteChanged?.Invoke(this, route);
             page.OnNavigated(query);
         }
     }

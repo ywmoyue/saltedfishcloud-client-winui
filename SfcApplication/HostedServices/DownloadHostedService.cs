@@ -25,17 +25,10 @@ namespace SfcApplication.HostedServices
         private List<DownloadTask> m_downloadTasks;
 
         public List<DownloadItem> DownloadItems { get => m_downloadTasks.Select(x => x.DownloadItem).ToList(); }
-        public List<DownloadItem> DownloadingItems
-        {
-            get => m_downloadTasks.Select(x => x.DownloadItem).Where(x => x.Status != Models.Enums.DownloadStatus.Downloaded).ToList();
-        }
-        public List<DownloadItem> DownloadedItems
-        {
-            get => m_downloadTasks.Select(x => x.DownloadItem).Where(x => x.Status == Models.Enums.DownloadStatus.Downloaded).ToList();
-        }
 
         public event EventHandler<List<DownloadItem>> DownloadItemsChange;
-        public event EventHandler<DownloadItem> DownloadingItemChange;
+        public event EventHandler<DownloadItem> DownloadItemChange;
+        public event EventHandler<DownloadItem> DownloadItemAdd;
 
         public DownloadHostedService(ClientConfig clientConfig, DownloadConfiguration downloadConfig, LocalFileIOService localFileIOService)
         {
@@ -86,7 +79,7 @@ namespace SfcApplication.HostedServices
             downloader.DownloadProgressChanged += (sender, e) =>
             {
                 downloadItem.DownloadedSize = e.ReceivedBytesSize;
-                DownloadingItemChange?.Invoke(this, downloadItem);
+                DownloadItemChange?.Invoke(this, downloadItem);
             };
             var downloadTask = new DownloadTask()
             {
@@ -95,7 +88,7 @@ namespace SfcApplication.HostedServices
                 DownloadPackage = downloader.Package
             };
             m_downloadTasks.Add(downloadTask);
-            DownloadItemsChange?.Invoke(this, DownloadItems);
+            DownloadItemAdd?.Invoke(this, downloadItem);
             await WriteTaskToFile();
             await downloader.StartAsync();
         }
@@ -121,7 +114,7 @@ namespace SfcApplication.HostedServices
 
         private int CreateNewDownloadId()
         {
-            var id = m_downloadTasks.LastOrDefault()?.DownloadItem.Id;
+            var id = m_downloadTasks.LastOrDefault()?.DownloadItem.Id+1;
             if (id == null)
             {
                 id = 1;

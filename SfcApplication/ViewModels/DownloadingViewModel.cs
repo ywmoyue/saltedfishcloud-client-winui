@@ -10,11 +10,11 @@ namespace SfcApplication.ViewModels
 {
     public class DownloadingViewModel:BaseViewModel
     {
-        public ObservableCollection<DownloadItem> DownloadItemList { get; set; }
+        public ObservableCollection<DownloadItemViewModel> DownloadItemList { get; set; }
 
         public DownloadingViewModel()
         {
-            DownloadItemList = new ObservableCollection<DownloadItem>();
+            DownloadItemList = new ObservableCollection<DownloadItemViewModel>();
         }
     }
 }

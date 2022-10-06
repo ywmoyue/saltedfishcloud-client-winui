@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AutoMapper;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -9,6 +10,7 @@ using SfcApplication.Extensions;
 using SfcApplication.HostedServices;
 using SfcApplication.Models.Common;
 using SfcApplication.Models.Entities;
+using SfcApplication.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,27 +27,9 @@ namespace SfcApplication.Views.Components
 {
     public sealed partial class DownloadingView : UserControl
     {
-        private readonly DownloadHostedService m_downloadHostedService;
-        public DownloadingView(DownloadHostedService downloadHostedService)
+        public DownloadingView()
         {
             this.InitializeComponent();
-            m_downloadHostedService = downloadHostedService;
-            ViewModel.DownloadItemList.AddRange(m_downloadHostedService.DownloadingItems);
-
-            m_downloadHostedService.DownloadingItemChange += DownloadHostedService_DownloadingItemChange;
-        }
-
-        private void DownloadHostedService_DownloadingItemChange(object sender, DownloadItem e)
-        {
-            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
-            {
-                var item = ViewModel.DownloadItemList.FirstOrDefault(x => x.Id == e.Id);
-                item.DownloadedSize = e.DownloadedSize;
-                var index = ViewModel.DownloadItemList.IndexOf(item);
-                //ViewModel.DownloadItemList.RemoveAt(index);
-                //ViewModel.DownloadItemList.Insert(index, item);
-                //ViewModel.UpdateDownloadItemListChild(ViewModel.DownloadItemList.IndexOf(item));
-            });
         }
     }
 }
