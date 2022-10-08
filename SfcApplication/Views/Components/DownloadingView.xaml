@@ -22,9 +22,9 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
                             <!--图标-->
@@ -42,24 +42,39 @@
                         </Grid>
                         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
                             <!--已下载大小/总大小-->
-                            <TextBlock Text="{x:Bind DownloadedSize,Mode=OneWay}"></TextBlock>
+                            <TextBlock Text="{x:Bind converters:ByteSizeConverter.ByteToSizeString(DownloadedSize),Mode=OneWay}"></TextBlock>
                             <TextBlock Text="/"></TextBlock>
-                            <TextBlock Text="{x:Bind DiskFileInfo.Size}"></TextBlock>
+                            <TextBlock Text="{x:Bind converters:ByteSizeConverter.ByteToSizeString(DiskFileInfo.Size)}"></TextBlock>
                         </StackPanel>
                         <Grid Grid.Row="0" Grid.Column="2">
                             <!--空白占位-->
                         </Grid>
-                        <Grid Grid.Row="0" Grid.Column="3" Grid.RowSpan="2">
+                        <Grid Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" VerticalAlignment="Center">
                             <!--预计剩余时间-->
+                            <TextBlock Text="{x:Bind converters:TimeConverter.EstimatedRemainingTimeToString(EstimatedRemainingTime),Mode=OneWay}"></TextBlock>
                         </Grid>
-                        <Grid Grid.Row="0" Grid.Column="4">
+                        <Grid Grid.Row="0" Grid.Column="4" VerticalAlignment="Bottom" Margin="20,0,0,0">
                             <!--进度条-->
+                            <ProgressBar Width="150" Value="{x:Bind ProgressPercentage,Mode=OneWay}" />
                         </Grid>
-                        <Grid Grid.Row="1" Grid.Column="4">
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="4"  VerticalAlignment="Top" HorizontalAlignment="Center">
                             <!--状态/速度-->
-                        </Grid>
-                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="5" Grid.RowSpan="2">
+                            <TextBlock 
+                                Visibility="{x:Bind converters:DownloadStatusConverter.GetNotDownloadingViewVisibility(Status)}" 
+                                Text="{x:Bind converters:DownloadStatusConverter.GetDownloadStatusText(Status),Mode=OneWay}"></TextBlock>
+                            <TextBlock 
+                                Visibility="{x:Bind converters:DownloadStatusConverter.GetDownloadingViewVisibility(Status)}" 
+                                Text="{x:Bind converters:ByteSizeConverter.ByteToSizeString(DownloadSpeed),Mode=OneWay}"></TextBlock>
+                            <TextBlock  Visibility="{x:Bind converters:DownloadStatusConverter.GetDownloadingViewVisibility(Status)}" Text="/s"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="5" Grid.RowSpan="2" Margin="20,0,10,0" HorizontalAlignment="Center">
                             <!--控制栏-->
+                            <Button Margin="5,0" BorderThickness="0" x:Name="PlayBtn" Click="PlayBtn_Click">
+                                <SymbolIcon Symbol="Play"  Visibility="{x:Bind converters:DownloadStatusConverter.GetNotDownloadingViewVisibility(Status)}"  />
+                            </Button>
+                            <SymbolIcon Symbol="Pause" Visibility="{x:Bind converters:DownloadStatusConverter.GetDownloadingViewVisibility(Status)}"  Margin="5,0"/>
+                            <SymbolIcon Symbol="Delete" Margin="5,0"/>
+                            <SymbolIcon Symbol="MoveToFolder" Margin="5,0"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

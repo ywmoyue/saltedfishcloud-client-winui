@@ -19,6 +19,9 @@ namespace SfcApplication.ViewModels
         public DateTimeOffset CreationTime { get; set; }
         public DateTimeOffset DownloadedTime { get; set; }
         public long DownloadedSize { get; set; }
+        public long DownloadSpeed { get; set; }
+        public TimeSpan EstimatedRemainingTime { get; set; }
+        public int ProgressPercentage { get; set; }
         public DownloadStatus Status { get; set; }
     }
 }

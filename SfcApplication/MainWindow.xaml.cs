@@ -41,6 +41,12 @@ namespace SfcApplication
             m_routeService = routeService;
             this.InitializeComponent();
             m_routeService.Init(MainFrame);
+            Closed += MainWindow_Closed;
+        }
+
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            throw new NotImplementedException();
         }
 
         private void MainNavView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

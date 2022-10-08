@@ -17,7 +17,7 @@
         <TabView IsAddTabButtonVisible="False">
             <TabView.TabItems>
                 <TabViewItem Header="正在下载" IsClosable="False" x:Name="DownloadingTab">
-                    <components:DownloadingView DataContext="{Binding DownloadingItemList,Mode=TwoWay}"></components:DownloadingView>
+                    <components:DownloadingView DataContext="{Binding DownloadingItemList,Mode=TwoWay}" x:Name="DownloadingView"></components:DownloadingView>
                 </TabViewItem>
                 <TabViewItem Header="已下载" IsClosable="False">
                     

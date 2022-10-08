@@ -27,9 +27,18 @@ namespace SfcApplication.Views.Components
 {
     public sealed partial class DownloadingView : UserControl
     {
+        public DownloadHostedService DownloadHostedService { get; set; }
+
         public DownloadingView()
         {
             this.InitializeComponent();
+        }
+
+        private void PlayBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var view = sender as FrameworkElement;
+            var item = view.DataContext as DownloadItemViewModel;
+            DownloadHostedService.Resume(item.Id);
         }
     }
 }

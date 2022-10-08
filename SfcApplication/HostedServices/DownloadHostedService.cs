@@ -75,10 +75,16 @@ namespace SfcApplication.HostedServices
             downloader.DownloadStarted += (sender, e) =>
             {
                 downloadItem.Status = Models.Enums.DownloadStatus.Downloading;
+                DownloadItemChange?.Invoke(this, downloadItem);
             };
             downloader.DownloadProgressChanged += (sender, e) =>
             {
                 downloadItem.DownloadedSize = e.ReceivedBytesSize;
+                DownloadItemChange?.Invoke(this, downloadItem);
+            };
+            downloader.DownloadFileCompleted += (sender, e) =>
+            {
+                downloadItem.Status = Models.Enums.DownloadStatus.Downloaded;
                 DownloadItemChange?.Invoke(this, downloadItem);
             };
             var downloadTask = new DownloadTask()
@@ -93,14 +99,34 @@ namespace SfcApplication.HostedServices
             await downloader.StartAsync();
         }
 
-        public void Pause(int downloadItemId)
+        public async Task Pause(int downloadItemId)
         {
-
+            var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
+            task.DownloadPackage = task.Downloader.Package;
+            task.Downloader.Stop();
+            await WriteTaskToFile();
         }
 
-        public void Resume(int downloadItemId)
+        public async Task Resume(int downloadItemId)
         {
-
+            var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
+            task.Downloader = DownloadBuilder.Build(task.DownloadPackage, m_downloadConfig);
+            task.Downloader.DownloadStarted += (sender, e) =>
+            {
+                task.DownloadItem.Status = Models.Enums.DownloadStatus.Downloading;
+                DownloadItemChange?.Invoke(this, task.DownloadItem);
+            };
+            task.Downloader.DownloadProgressChanged += (sender, e) =>
+            {
+                task.DownloadItem.DownloadedSize = e.ReceivedBytesSize;
+                DownloadItemChange?.Invoke(this, task.DownloadItem);
+            };
+            task.Downloader.DownloadFileCompleted += (sender, e) =>
+            {
+                task.DownloadItem.Status = Models.Enums.DownloadStatus.Downloaded;
+                DownloadItemChange?.Invoke(this, task.DownloadItem);
+            };
+            await task.Downloader.StartAsync();
         }
 
         private string ConstructDownloadUrl(string path,string fileName,int userId=0)

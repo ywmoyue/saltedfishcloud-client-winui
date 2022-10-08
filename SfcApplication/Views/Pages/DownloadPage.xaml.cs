@@ -45,11 +45,12 @@ namespace SfcApplication.Views.Pages
             ViewModel.DispatcherQueue = DispatcherQueue;
             m_downloadHostedService.DownloadItemChange += DownloadHostedService_DownloadItemChange;
             m_downloadHostedService.DownloadItemAdd += DownloadHostedService_DownloadItemAdd;
+            DownloadingView.DownloadHostedService=m_downloadHostedService;
         }
 
         private void DownloadHostedService_DownloadItemAdd(object sender, DownloadItem e)
         {
-            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+            DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 var downloadItem = m_mapper.Map<DownloadItemViewModel>(e);
                 ViewModel.DownloadItemList.Add(downloadItem);
@@ -58,11 +59,15 @@ namespace SfcApplication.Views.Pages
 
         private void DownloadHostedService_DownloadItemChange(object sender, DownloadItem e)
         {
-            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
             {
                 var item = ViewModel.DownloadItemList.FirstOrDefault(x => x.Id == e.Id);
                 if (item == null) return;
                 item.DownloadedSize = e.DownloadedSize;
+                item.DownloadSpeed = e.DownloadSpeed;
+                item.EstimatedRemainingTime = e.EstimatedRemainingTime;
+                item.ProgressPercentage = e.ProgressPercentage;
+                item.Status = e.Status;
                 var index = ViewModel.DownloadItemList.IndexOf(item);
             });
         }

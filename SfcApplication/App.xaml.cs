@@ -39,10 +39,10 @@ namespace SfcApplication
     /// </summary>
     public partial class App : Application
     {
-        private readonly IHost m_host; 
+        private readonly IHost m_host;
         private IConfiguration m_configuration;
         private Window m_window;
-        
+
         public App()
         {
             InitConfiguration();
@@ -82,7 +82,7 @@ namespace SfcApplication
             services.AddSingleton<DownloadHostedService>();
             services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<DownloadHostedService>());
         }
-        
+
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             // start hostedServices
@@ -96,5 +96,6 @@ namespace SfcApplication
         {
             await services.GetRequiredService<DownloadHostedService>().StartAsync(System.Threading.CancellationToken.None);
         }
-}
+
+    }
 }
