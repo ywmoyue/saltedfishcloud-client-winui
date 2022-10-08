@@ -34,11 +34,18 @@ namespace SfcApplication.Views.Components
             this.InitializeComponent();
         }
 
-        private void PlayBtn_Click(object sender, RoutedEventArgs e)
+        private async void PlayBtn_Click(object sender, RoutedEventArgs e)
         {
             var view = sender as FrameworkElement;
             var item = view.DataContext as DownloadItemViewModel;
-            DownloadHostedService.Resume(item.Id);
+            await DownloadHostedService.Resume(item.Id);
+        }
+
+        private void PauseBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var view = sender as FrameworkElement;
+            var item = view.DataContext as DownloadItemViewModel;
+            DownloadHostedService.Pause(item.Id);
         }
     }
 }

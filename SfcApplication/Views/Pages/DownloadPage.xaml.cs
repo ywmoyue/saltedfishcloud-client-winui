@@ -45,7 +45,19 @@ namespace SfcApplication.Views.Pages
             ViewModel.DispatcherQueue = DispatcherQueue;
             m_downloadHostedService.DownloadItemChange += DownloadHostedService_DownloadItemChange;
             m_downloadHostedService.DownloadItemAdd += DownloadHostedService_DownloadItemAdd;
+            m_downloadHostedService.DownloadItemFinish += DownloadHostedService_DownloadItemFinish;
             DownloadingView.DownloadHostedService=m_downloadHostedService;
+        }
+
+        private void DownloadHostedService_DownloadItemFinish(object sender, DownloadItem e)
+        {
+            DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            {
+                var item = ViewModel.DownloadItemList.FirstOrDefault(x => x.Id == e.Id);
+                if (item == null) return;
+                item.Status = e.Status;
+                ViewModel.UpdateDownloadItemList();
+            });
         }
 
         private void DownloadHostedService_DownloadItemAdd(object sender, DownloadItem e)
@@ -68,7 +80,6 @@ namespace SfcApplication.Views.Pages
                 item.EstimatedRemainingTime = e.EstimatedRemainingTime;
                 item.ProgressPercentage = e.ProgressPercentage;
                 item.Status = e.Status;
-                var index = ViewModel.DownloadItemList.IndexOf(item);
             });
         }
     }

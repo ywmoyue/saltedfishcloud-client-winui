@@ -12,6 +12,7 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\Components\DownloadedView.xaml" />
     <None Remove="Views\Components\DownloadingView.xaml" />
     <None Remove="Views\DownloadPage.xaml" />
     <None Remove="Views\FileListPage.xaml" />
@@ -55,6 +56,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Components\DownloadedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\DownloadingView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

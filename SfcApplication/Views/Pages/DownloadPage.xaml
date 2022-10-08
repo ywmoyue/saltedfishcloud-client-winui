@@ -20,7 +20,7 @@
                     <components:DownloadingView DataContext="{Binding DownloadingItemList,Mode=TwoWay}" x:Name="DownloadingView"></components:DownloadingView>
                 </TabViewItem>
                 <TabViewItem Header="已下载" IsClosable="False">
-                    
+                    <components:DownloadedView DataContext="{Binding DownloadedItemList,Mode=TwoWay}" x:Name="DownloadedView"></components:DownloadedView>
                 </TabViewItem>
             </TabView.TabItems>
         </TabView>

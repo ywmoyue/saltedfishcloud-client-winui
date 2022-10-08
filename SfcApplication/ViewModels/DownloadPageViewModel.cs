@@ -22,6 +22,13 @@ namespace SfcApplication.ViewModels
             get => new ObservableCollection<DownloadItemViewModel>(DownloadItemList.Where(x => x.Status != Models.Enums.DownloadStatus.Downloaded));
         }
 
+
+        [DependsOn("DownloadItemList")]
+        public ObservableCollection<DownloadItemViewModel> DownloadedItemList
+        {
+            get => new ObservableCollection<DownloadItemViewModel>(DownloadItemList.Where(x => x.Status == Models.Enums.DownloadStatus.Downloaded));
+        }
+
         public DownloadPageViewModel()
         {
             DownloadItemList = new ObservableCollection<DownloadItemViewModel>();
@@ -34,7 +41,14 @@ namespace SfcApplication.ViewModels
             DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
             {
                 Set("DownloadingItemList");
+                Set("DownloadedItemList");
             });
+        }
+
+        public void UpdateDownloadItemList()
+        {
+            Set("DownloadingItemList");
+            Set("DownloadedItemList");
         }
     }
 }

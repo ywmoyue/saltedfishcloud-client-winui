@@ -14,6 +14,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using SfcApplication.Clients;
+using SfcApplication.HostedServices;
 using SfcApplication.Models.Common;
 using SfcApplication.Services;
 using SfcApplication.Views;
@@ -31,22 +32,24 @@ namespace SfcApplication
         private UserClient m_userClient;
         private DiskFileClient m_diskFileClient;
         private IServiceProvider m_serviceProvider;
-        private RouteService m_routeService;
+        private readonly RouteService m_routeService;
+        private readonly DownloadHostedService m_downloadHostedService;
 
-        public MainWindow(UserClient userClient, DiskFileClient diskFileClient, HelloClient helloClient ,RouteService routeService, IServiceProvider serviceProvider)
+        public MainWindow(UserClient userClient, DiskFileClient diskFileClient, HelloClient helloClient ,RouteService routeService, IServiceProvider serviceProvider, DownloadHostedService downloadHostedService)
         {
             m_userClient = userClient;
             m_diskFileClient = diskFileClient;
             m_serviceProvider = serviceProvider;
+            m_downloadHostedService = downloadHostedService;
             m_routeService = routeService;
             this.InitializeComponent();
             m_routeService.Init(MainFrame);
             Closed += MainWindow_Closed;
         }
 
-        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        private async void MainWindow_Closed(object sender, WindowEventArgs args)
         {
-            throw new NotImplementedException();
+            await m_downloadHostedService.PauseAllWithExit();
         }
 
         private void MainNavView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

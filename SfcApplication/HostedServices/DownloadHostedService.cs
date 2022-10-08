@@ -28,6 +28,7 @@ namespace SfcApplication.HostedServices
 
         public event EventHandler<List<DownloadItem>> DownloadItemsChange;
         public event EventHandler<DownloadItem> DownloadItemChange;
+        public event EventHandler<DownloadItem> DownloadItemFinish;
         public event EventHandler<DownloadItem> DownloadItemAdd;
 
         public DownloadHostedService(ClientConfig clientConfig, DownloadConfiguration downloadConfig, LocalFileIOService localFileIOService)
@@ -72,6 +73,63 @@ namespace SfcApplication.HostedServices
                 DownloadedSize = 0,
                 Status = Models.Enums.DownloadStatus.NotStarted
             };
+            InitDownloaderEvent(downloader, downloadItem);
+            var downloadTask = new DownloadTask()
+            {
+                Downloader = downloader,
+                DownloadItem = downloadItem,
+                DownloadPackage = downloader.Package
+            };
+            m_downloadTasks.Add(downloadTask);
+            DownloadItemAdd?.Invoke(this, downloadItem);
+            await downloader.StartAsync();
+        }
+
+        public void Pause(int downloadItemId)
+        {
+            var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
+            task.DownloadItem.Status = Models.Enums.DownloadStatus.Paused;
+            DownloadItemChange?.Invoke(this, task.DownloadItem);
+            task?.Downloader.Pause();
+        }
+
+        public async Task Resume(int downloadItemId)
+        {
+            var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
+            if (task.Downloader == null)
+            {
+                await ResumeWithStart(downloadItemId);
+            }
+            else
+            {
+                task?.Downloader.Resume();
+                task.DownloadItem.Status = Models.Enums.DownloadStatus.Downloading;
+                DownloadItemChange?.Invoke(this, task.DownloadItem);
+            }
+        }
+
+        public async Task PauseAllWithExit()
+        {
+            foreach (var downloadTask in m_downloadTasks)
+            {
+                if(downloadTask.Downloader==null||downloadTask.DownloadItem.Status==Models.Enums.DownloadStatus.Downloaded)continue;
+                downloadTask.DownloadPackage = downloadTask.Downloader.Package;
+                downloadTask.DownloadItem.Status = Models.Enums.DownloadStatus.Paused;
+                downloadTask.Downloader.Pause();
+            }
+            await WriteTaskToFile();
+        }
+
+        public async Task ResumeWithStart(int downloadItemId)
+        {
+            var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
+            task.Downloader = DownloadBuilder.Build(task.DownloadPackage, m_downloadConfig);
+            InitDownloaderEvent(task.Downloader, task.DownloadItem);
+            await task.Downloader.StartAsync();
+        }
+
+        private void InitDownloaderEvent(IDownload downloader, DownloadItem downloadItem)
+        {
             downloader.DownloadStarted += (sender, e) =>
             {
                 downloadItem.Status = Models.Enums.DownloadStatus.Downloading;
@@ -84,49 +142,18 @@ namespace SfcApplication.HostedServices
             };
             downloader.DownloadFileCompleted += (sender, e) =>
             {
-                downloadItem.Status = Models.Enums.DownloadStatus.Downloaded;
-                DownloadItemChange?.Invoke(this, downloadItem);
+                var package = e.UserState as DownloadPackage;
+                if (package.Status == DownloadStatus.Completed)
+                {
+                    downloadItem.Status = Models.Enums.DownloadStatus.Downloaded;
+                    DownloadItemFinish?.Invoke(this, downloadItem);
+                }
+                else
+                {
+                    downloadItem.Status = Models.Enums.DownloadStatus.Failed;
+                    DownloadItemChange?.Invoke(this, downloadItem);
+                }
             };
-            var downloadTask = new DownloadTask()
-            {
-                Downloader = downloader,
-                DownloadItem = downloadItem,
-                DownloadPackage = downloader.Package
-            };
-            m_downloadTasks.Add(downloadTask);
-            DownloadItemAdd?.Invoke(this, downloadItem);
-            await WriteTaskToFile();
-            await downloader.StartAsync();
-        }
-
-        public async Task Pause(int downloadItemId)
-        {
-            var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
-            task.DownloadPackage = task.Downloader.Package;
-            task.Downloader.Stop();
-            await WriteTaskToFile();
-        }
-
-        public async Task Resume(int downloadItemId)
-        {
-            var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
-            task.Downloader = DownloadBuilder.Build(task.DownloadPackage, m_downloadConfig);
-            task.Downloader.DownloadStarted += (sender, e) =>
-            {
-                task.DownloadItem.Status = Models.Enums.DownloadStatus.Downloading;
-                DownloadItemChange?.Invoke(this, task.DownloadItem);
-            };
-            task.Downloader.DownloadProgressChanged += (sender, e) =>
-            {
-                task.DownloadItem.DownloadedSize = e.ReceivedBytesSize;
-                DownloadItemChange?.Invoke(this, task.DownloadItem);
-            };
-            task.Downloader.DownloadFileCompleted += (sender, e) =>
-            {
-                task.DownloadItem.Status = Models.Enums.DownloadStatus.Downloaded;
-                DownloadItemChange?.Invoke(this, task.DownloadItem);
-            };
-            await task.Downloader.StartAsync();
         }
 
         private string ConstructDownloadUrl(string path,string fileName,int userId=0)
@@ -150,7 +177,14 @@ namespace SfcApplication.HostedServices
 
         private async Task WriteTaskToFile()
         {
-            await m_localFileIOService.SetDownloadTaskList(m_downloadTasks);
+            try
+            {
+                await m_localFileIOService.SetDownloadTaskList(m_downloadTasks);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

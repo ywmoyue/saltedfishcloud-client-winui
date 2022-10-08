@@ -3,10 +3,13 @@ using SfcApplication.Models.Common;
 using SfcApplication.Models.Configs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SfcApplication.Converters;
 
 namespace SfcApplication.Services
 {
@@ -43,32 +46,70 @@ namespace SfcApplication.Services
             return downloadTaskList;
         }
 
+        //private async Task Write(List<string> folderNames, string fileName, object data)
+        //{
+        //    StorageFolder currentFolder = m_localFolder;
+        //    foreach (var fName in folderNames)
+        //    {
+        //        currentFolder = await currentFolder.CreateFolderAsync(fName, CreationCollisionOption.OpenIfExists);
+        //    }
+
+        //    var file = await currentFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+        //    string dataStr = JsonConvert.SerializeObject(data);
+        //    await FileIO.WriteTextAsync(file, dataStr);
+        //}
+
         private async Task Write(List<string> folderNames, string fileName, object data)
-        {
-            StorageFolder currentFolder = m_localFolder;
+        { 
+            var currentFolder = new DirectoryInfo(m_localFolder.Path);
             foreach (var fName in folderNames)
             {
-                currentFolder = await currentFolder.CreateFolderAsync(fName, CreationCollisionOption.OpenIfExists);
+                var tempFolder = new DirectoryInfo($"{currentFolder.FullName}/{fName}");
+                if(!tempFolder.Exists)
+                    tempFolder.Create();
+                currentFolder = tempFolder;
             }
-            var file = await currentFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+
+            var file = new FileInfo($"{currentFolder.FullName}/{fileName}");
             string dataStr = JsonConvert.SerializeObject(data);
-            await FileIO.WriteTextAsync(file, dataStr);
+            var stream=file.CreateText();
+            await stream.WriteAsync(dataStr);
+            stream.Close();
         }
+
+        //private async Task<T> Read<T>(List<string> folderNames, string fileName)
+        //{
+        //    StorageFolder currentFolder = m_localFolder;
+        //    foreach (var fName in folderNames)
+        //    {
+        //        var fI = (await currentFolder.TryGetItemAsync(fName));
+        //        if (fI == null) return default;
+        //        currentFolder = (StorageFolder)fI;
+        //    }
+        //    var fileI = await currentFolder.TryGetItemAsync(fileName);
+        //    if (fileI == null) return default;
+        //    var file = (StorageFile)fileI;
+        //    var dataStr = await FileIO.ReadTextAsync(file);
+        //    var data = JsonConvert.DeserializeObject<T>(dataStr);
+        //    return data;
+        //}
 
         private async Task<T> Read<T>(List<string> folderNames, string fileName)
         {
-            StorageFolder currentFolder = m_localFolder;
-            foreach (var fName in folderNames)
+            var path = m_localFolder.Path;
+            foreach (var folderName in folderNames)
             {
-                var fI = (await currentFolder.TryGetItemAsync(fName));
-                if (fI == null) return default;
-                currentFolder = (StorageFolder)fI;
+                path += $"/{folderName}";
             }
-            var fileI = await currentFolder.TryGetItemAsync(fileName);
-            if (fileI == null) return default;
-            var file = (StorageFile)fileI;
-            var dataStr = await FileIO.ReadTextAsync(file);
-            var data = JsonConvert.DeserializeObject<T>(dataStr);
+
+            var file = new FileInfo($"{path}/{fileName}");
+            if (!file.Exists) return default;
+            var stream = file.OpenText();
+            var dataStr = await stream.ReadToEndAsync();
+            stream.Close();
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new DownloadStorageConverter());
+            var data = JsonConvert.DeserializeObject<T>(dataStr, settings);
             return data;
         }
     }
