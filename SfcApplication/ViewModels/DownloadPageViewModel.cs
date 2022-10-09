@@ -15,19 +15,13 @@ namespace SfcApplication.ViewModels
     {
         public DispatcherQueue DispatcherQueue { get; set; }
         public ObservableCollection<DownloadItemViewModel> DownloadItemList { get; set; }
-
-        [DependsOn("DownloadItemList")]
-        public ObservableCollection<DownloadItemViewModel> DownloadingItemList
-        {
-            get => new ObservableCollection<DownloadItemViewModel>(DownloadItemList.Where(x => x.Status != Models.Enums.DownloadStatus.Downloaded));
-        }
+        
+        [DependsOn(nameof(DownloadItemList))]
+        public ObservableCollection<DownloadItemViewModel> DownloadingItemList => new ObservableCollection<DownloadItemViewModel>(DownloadItemList.Where(x => x.Status != Models.Enums.DownloadStatus.Downloaded));
 
 
-        [DependsOn("DownloadItemList")]
-        public ObservableCollection<DownloadItemViewModel> DownloadedItemList
-        {
-            get => new ObservableCollection<DownloadItemViewModel>(DownloadItemList.Where(x => x.Status == Models.Enums.DownloadStatus.Downloaded));
-        }
+        [DependsOn(nameof(DownloadItemList))]
+        public ObservableCollection<DownloadItemViewModel> DownloadedItemList => new ObservableCollection<DownloadItemViewModel>(DownloadItemList.Where(x => x.Status == Models.Enums.DownloadStatus.Downloaded));
 
         public DownloadPageViewModel()
         {
@@ -40,15 +34,15 @@ namespace SfcApplication.ViewModels
             if (DispatcherQueue == null) return;
             DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
             {
-                Set("DownloadingItemList");
-                Set("DownloadedItemList");
+                Set(nameof(DownloadingItemList));
+                Set(nameof(DownloadedItemList));
             });
         }
 
         public void UpdateDownloadItemList()
         {
-            Set("DownloadingItemList");
-            Set("DownloadedItemList");
+            Set(nameof(DownloadingItemList));
+            Set(nameof(DownloadedItemList));
         }
     }
 }

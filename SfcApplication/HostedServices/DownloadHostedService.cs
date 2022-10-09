@@ -56,7 +56,7 @@ namespace SfcApplication.HostedServices
         {
             if (string.IsNullOrEmpty(downloadPath))
                 downloadPath = m_clientConfig.DefaultDownloadPath;
-            var path = diskFileInfo.Paths.GetFilePathExceptRoot();
+            var path = diskFileInfo.Paths.GetFileUrlExceptRoot();
             var url = ConstructDownloadUrl(path, diskFileInfo.Name);
             downloadPath += path;
             var downloader = DownloadBuilder.New()

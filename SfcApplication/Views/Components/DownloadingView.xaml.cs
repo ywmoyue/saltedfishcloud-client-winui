@@ -27,7 +27,9 @@ namespace SfcApplication.Views.Components
 {
     public sealed partial class DownloadingView : UserControl
     {
-        public DownloadHostedService DownloadHostedService { get; set; }
+        public event EventHandler<DownloadItemViewModel> OpenFolderToFile;
+        public event EventHandler<DownloadItemViewModel> DownloadPlay;
+        public event EventHandler<DownloadItemViewModel> DownloadPause;
 
         public DownloadingView()
         {
@@ -38,14 +40,20 @@ namespace SfcApplication.Views.Components
         {
             var view = sender as FrameworkElement;
             var item = view.DataContext as DownloadItemViewModel;
-            await DownloadHostedService.Resume(item.Id);
+            DownloadPlay?.Invoke(this,item);
         }
 
         private void PauseBtn_OnClick(object sender, RoutedEventArgs e)
         {
             var view = sender as FrameworkElement;
             var item = view.DataContext as DownloadItemViewModel;
-            DownloadHostedService.Pause(item.Id);
+            DownloadPause?.Invoke(this, item);
+        }
+        private void OpenFolderBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var view = sender as FrameworkElement;
+            var item = view.DataContext as DownloadItemViewModel;
+            OpenFolderToFile?.Invoke(this, item);
         }
     }
 }

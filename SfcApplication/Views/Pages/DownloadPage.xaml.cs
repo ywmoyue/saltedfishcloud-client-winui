@@ -20,6 +20,7 @@ using Windows.UI.Core;
 using SfcApplication.Views.Components;
 using SfcApplication.Services;
 using AutoMapper;
+using SfcApplication.Models.Configs;
 using SfcApplication.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -32,13 +33,15 @@ namespace SfcApplication.Views.Pages
     /// </summary>
     public sealed partial class DownloadPage : RoutePage
     {
-        private DownloadHostedService m_downloadHostedService;
-        private IMapper m_mapper;
+        private readonly DownloadHostedService m_downloadHostedService;
+        private readonly ClientConfig m_clientConfig;
+        private readonly IMapper m_mapper;
 
-        public DownloadPage(DownloadHostedService downloadHostedService, IMapper mapper)
+        public DownloadPage(DownloadHostedService downloadHostedService, IMapper mapper, ClientConfig clientConfig)
         {
             m_downloadHostedService = downloadHostedService;
             m_mapper = mapper;
+            m_clientConfig = clientConfig;
             this.InitializeComponent();
             var list = mapper.Map<List<DownloadItemViewModel>>(m_downloadHostedService.DownloadItems);
             ViewModel.DownloadItemList.AddRange(list);
@@ -46,7 +49,27 @@ namespace SfcApplication.Views.Pages
             m_downloadHostedService.DownloadItemChange += DownloadHostedService_DownloadItemChange;
             m_downloadHostedService.DownloadItemAdd += DownloadHostedService_DownloadItemAdd;
             m_downloadHostedService.DownloadItemFinish += DownloadHostedService_DownloadItemFinish;
-            DownloadingView.DownloadHostedService=m_downloadHostedService;
+            DownloadedView.OpenFolderToFile += OpenFolderToFile;
+            DownloadingView.OpenFolderToFile += OpenFolderToFile;
+            DownloadingView.DownloadPlay += DownloadingView_DownloadPlay;
+            DownloadingView.DownloadPause += DownloadingView_DownloadPause;
+        }
+
+        private void DownloadingView_DownloadPause(object sender, DownloadItemViewModel e)
+        {
+            m_downloadHostedService.Pause(e.Id);
+        }
+
+        private async void DownloadingView_DownloadPlay(object sender, DownloadItemViewModel e)
+        {
+            await m_downloadHostedService.Resume(e.Id);
+        }
+
+        private void OpenFolderToFile(object sender, DownloadItemViewModel e)
+        {
+            var downloadPath = m_clientConfig.DefaultDownloadPath;
+            var path = e.DiskFileInfo.Paths.GetFilePathExceptRoot();
+            System.Diagnostics.Process.Start("Explorer.exe", "/select," + $"{downloadPath}{path}{e.DiskFileInfo.Name}");
         }
 
         private void DownloadHostedService_DownloadItemFinish(object sender, DownloadItem e)

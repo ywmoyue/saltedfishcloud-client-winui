@@ -70,7 +70,7 @@ namespace SfcApplication.Views.Pages
 
         public async Task InitData()
         {
-            var path = ViewModel.Paths.GetFilePathExceptRoot();
+            var path = ViewModel.Paths.GetFileUrlExceptRoot();
             var diskFileInfos = await m_diskFileClient.GetFileList(path);
             var mappers = m_mapper.Map<List<DiskFileInfoMapper>>(diskFileInfos);
             mappers.ForEach(x=>
@@ -86,7 +86,7 @@ namespace SfcApplication.Views.Pages
         {
             var originalSource = sender as FrameworkElement;
             
-            var fileInfo = originalSource.DataContext as DiskFileInfo;
+            var fileInfo = originalSource.DataContext as DiskFileInfoMapper;
             if (fileInfo.Dir)
             {
                 ViewModel.Paths.Add(fileInfo.Name);

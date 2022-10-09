@@ -72,7 +72,7 @@
                             <AppBarButton Icon="Play" LabelPosition="Collapsed" x:Name="PlayBtn" Click="PlayBtn_Click" Visibility="{x:Bind converters:DownloadStatusConverter.GetNotDownloadingViewVisibility(Status),Mode=OneWay}"/>
                             <AppBarButton Icon="Pause" LabelPosition="Collapsed" x:Name="PauseBtn" Click="PauseBtn_OnClick" Visibility="{x:Bind converters:DownloadStatusConverter.GetDownloadingViewVisibility(Status),Mode=OneWay}"/>
                             <AppBarButton Icon="Delete" LabelPosition="Collapsed"/>
-                            <AppBarButton Icon="MoveToFolder" LabelPosition="Collapsed"/>
+                            <AppBarButton Icon="MoveToFolder" LabelPosition="Collapsed" x:Name="OpenFolderBtn" Click="OpenFolderBtn_OnClick"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

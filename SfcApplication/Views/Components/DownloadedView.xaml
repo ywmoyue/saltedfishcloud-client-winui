@@ -52,7 +52,7 @@
                         </Grid>
                         <Grid Grid.Row="0" Grid.Column="4" VerticalAlignment="Bottom" Margin="20,0,0,0">
                             <!--进度条-->
-                            <ProgressBar Width="150" Value="{x:Bind ProgressPercentage,Mode=OneWay}" />
+                            <ProgressBar Width="150" Value="100" />
                         </Grid>
                         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="4"  VerticalAlignment="Top" HorizontalAlignment="Center">
                             <!--状态/速度-->
@@ -62,7 +62,7 @@
                         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="5" Grid.RowSpan="2" Margin="20,0,10,0" HorizontalAlignment="Center">
                             <!--控制栏-->
                             <AppBarButton Icon="Delete" LabelPosition="Collapsed"/>
-                            <AppBarButton Icon="MoveToFolder" LabelPosition="Collapsed"/>
+                            <AppBarButton Icon="MoveToFolder" LabelPosition="Collapsed" x:Name="OpenFolderBtn" Click="OpenFolderBtn_OnClick"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
