@@ -12,5 +12,10 @@ namespace SfcApplication.Extensions
         {
             return source.Replace("{{"+name+"}}", value);
         }
+
+        public static string UrlToPath(this string url)
+        {
+            return url.Replace("/","\\");
+        }
     }
 }

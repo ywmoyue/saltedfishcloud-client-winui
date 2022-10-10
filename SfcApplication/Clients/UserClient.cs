@@ -13,7 +13,6 @@ namespace SfcApplication.Clients
 {
     public class UserClient
     {
-        private string m_token;
         private ClientConfig m_clientConfig;
 
         public UserClient(ClientConfig clientConfig)
@@ -21,35 +20,40 @@ namespace SfcApplication.Clients
             m_clientConfig = clientConfig;
         }
 
-        public async Task<string> GetToken(string user, string password)
+        public async Task<(string,bool)> GetToken(string user, string password)
         {
             try
             {
-                var url = m_clientConfig.BaseUrl + m_clientConfig.OpenApi.GetUserToken.
-                    ReplaceParameter("user", user).
-                    ReplaceParameter("passwd", password);
+                var url = m_clientConfig.BaseUrl + m_clientConfig.OpenApi.GetUserToken.ReplaceParameter("user", user)
+                    .ReplaceParameter("passwd", password);
                 var result = await url
                     .PostUrlEncodedAsync(new
                     {
-                        user=user,
-                        passwd=password
+                        user = user,
+                        passwd = password
                     })
                     .ReceiveJson<BaseBean<string>>();
-                return result.Data;
+                var success = result.Code == 200;
+                return (result.Data, success);
+            }
+            catch (FlurlHttpException ex)
+            {
+                var result=await ex.Call.Response.GetJsonAsync<BaseBean<string>>();
+                return (result.Msg, false);
             }
             catch (Exception ex)
             {
-                
+                // ignored
             }
 
-            return null;
+            return default;
         }
 
-        public async Task<User> GetUserInfo()
+        public async Task<User> GetUserInfo(string token)
         {
             var url = m_clientConfig.BaseUrl + m_clientConfig.OpenApi.GetUserInfo;
             var result = await url
-                .WithHeader("Token", m_token)
+                .WithHeader("Token", token)
                 .GetAsync()
                 .ReceiveJson<BaseBean<User>>();
             return result.Data;

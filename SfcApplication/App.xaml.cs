@@ -73,6 +73,7 @@ namespace SfcApplication
             services.AddScoped<UserClient>();
             services.AddScoped<DiskFileClient>();
             services.AddSingleton<RouteService>();
+            services.AddSingleton<ToastService>();
             services.AddScoped<LocalFileIOService>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<FileListPage>();
@@ -81,6 +82,8 @@ namespace SfcApplication
             //services.AddScoped<DownloadingView>();
             services.AddSingleton<DownloadHostedService>();
             services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<DownloadHostedService>());
+            services.AddSingleton<UserHostedService>();
+            services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<UserHostedService>());
         }
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
@@ -95,6 +98,7 @@ namespace SfcApplication
         private async Task StartHostedServices(IServiceProvider services)
         {
             await services.GetRequiredService<DownloadHostedService>().StartAsync(System.Threading.CancellationToken.None);
+            await services.GetRequiredService<UserHostedService>().StartAsync(System.Threading.CancellationToken.None);
         }
 
     }

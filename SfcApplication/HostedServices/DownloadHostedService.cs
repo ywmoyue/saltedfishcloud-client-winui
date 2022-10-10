@@ -128,6 +128,28 @@ namespace SfcApplication.HostedServices
             await task.Downloader.StartAsync();
         }
 
+        public string GetFilePath(int downloadItemId)
+        {
+            var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
+            if (task.DownloadPackage != null)
+            {
+                if (task.DownloadItem.Status == Models.Enums.DownloadStatus.Downloaded)
+                {
+                    return task.DownloadPackage.FileName.UrlToPath();
+                }
+
+                var pkgStorage = task.DownloadPackage.Chunks[0].Storage as FileStorage;
+                return pkgStorage.FileName.UrlToPath();
+            }
+
+            if (task.DownloadItem.Status == Models.Enums.DownloadStatus.Downloaded)
+            {
+                return task.Downloader.Filename.UrlToPath();
+            }
+            var storage = task.Downloader.Package.Chunks[0].Storage as FileStorage;
+            return storage.FileName.UrlToPath();
+        }
+
         private void InitDownloaderEvent(IDownload downloader, DownloadItem downloadItem)
         {
             downloader.DownloadStarted += (sender, e) =>

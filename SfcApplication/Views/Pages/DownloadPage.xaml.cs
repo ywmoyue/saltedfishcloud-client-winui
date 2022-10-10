@@ -67,9 +67,8 @@ namespace SfcApplication.Views.Pages
 
         private void OpenFolderToFile(object sender, DownloadItemViewModel e)
         {
-            var downloadPath = m_clientConfig.DefaultDownloadPath;
-            var path = e.DiskFileInfo.Paths.GetFilePathExceptRoot();
-            System.Diagnostics.Process.Start("Explorer.exe", "/select," + $"{downloadPath}{path}{e.DiskFileInfo.Name}");
+            var path = m_downloadHostedService.GetFilePath(e.Id);
+            System.Diagnostics.Process.Start("Explorer.exe", "/select," + $"{path}");
         }
 
         private void DownloadHostedService_DownloadItemFinish(object sender, DownloadItem e)

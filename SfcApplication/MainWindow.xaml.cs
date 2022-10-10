@@ -34,17 +34,21 @@ namespace SfcApplication
         private IServiceProvider m_serviceProvider;
         private readonly RouteService m_routeService;
         private readonly DownloadHostedService m_downloadHostedService;
+        private readonly ToastService m_toastService;
 
-        public MainWindow(UserClient userClient, DiskFileClient diskFileClient, HelloClient helloClient ,RouteService routeService, IServiceProvider serviceProvider, DownloadHostedService downloadHostedService)
+        public MainWindow(UserClient userClient, DiskFileClient diskFileClient, HelloClient helloClient ,RouteService routeService, IServiceProvider serviceProvider, DownloadHostedService downloadHostedService, ToastService toastService)
         {
             m_userClient = userClient;
             m_diskFileClient = diskFileClient;
             m_serviceProvider = serviceProvider;
             m_downloadHostedService = downloadHostedService;
+            m_toastService = toastService;
             m_routeService = routeService;
             this.InitializeComponent();
             m_routeService.Init(MainFrame);
+            m_toastService.Init(RootElement);
             Closed += MainWindow_Closed;
+            m_routeService.Push("/fileList/public");
         }
 
         private async void MainWindow_Closed(object sender, WindowEventArgs args)
