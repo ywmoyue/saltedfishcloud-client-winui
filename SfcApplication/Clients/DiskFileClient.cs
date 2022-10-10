@@ -21,7 +21,7 @@ namespace SfcApplication.Clients
             m_clientConfig = clientConfig;
         }
 
-        public async Task<List<DiskFileInfo>> GetFileList(string path = "",int userId=0)
+        public async Task<List<DiskFileInfo>> GetFileList(string path = "",int userId=0,string token=null)
         {
             try
             {
@@ -29,6 +29,7 @@ namespace SfcApplication.Clients
                     ReplaceParameter("userId", userId+"").
                     ReplaceParameter("path", path);
                 var result= await url
+                    .WithHeader("Token", token)
                     .GetAsync()
                     .ReceiveJson<BaseBean<List<List<DiskFileInfo>>>>();
                 result.Data[0].AddRange(result.Data[1]);

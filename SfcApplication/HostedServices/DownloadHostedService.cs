@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using NClone;
 
 namespace SfcApplication.HostedServices
 {
@@ -52,15 +53,20 @@ namespace SfcApplication.HostedServices
             return Task.CompletedTask;
         }
 
-        public async Task Download(DiskFileInfoMapper diskFileInfo,string downloadPath="")
+        public async Task Download(DiskFileInfoMapper diskFileInfo,string downloadPath="",int userId=0,string token=null)
         {
             if (string.IsNullOrEmpty(downloadPath))
                 downloadPath = m_clientConfig.DefaultDownloadPath;
             var path = diskFileInfo.Paths.GetFileUrlExceptRoot();
-            var url = ConstructDownloadUrl(path, diskFileInfo.Name);
+            var url = ConstructDownloadUrl(path, diskFileInfo.Name,userId);
             downloadPath += path;
+            var config = Clone.ObjectGraph(m_downloadConfig);
+            if (!string.IsNullOrEmpty(token))
+            {
+                config.RequestConfiguration.Headers.Add("Token", token);
+            }
             var downloader = DownloadBuilder.New()
-                .WithConfiguration(m_downloadConfig)
+                .WithConfiguration(config)
                 .WithUrl(url)
                 .WithDirectory(downloadPath)
                 .WithFileName(diskFileInfo.Name)

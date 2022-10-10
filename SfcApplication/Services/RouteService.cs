@@ -31,6 +31,7 @@ namespace SfcApplication.Services
             m_routes = new List<RouteItem>();
             m_routes.Add(new RouteItem() { Name = "login", PageType = typeof(LoginPage), Path = "/login" });
             m_routes.Add(new RouteItem() { Name = "publicFile", PageType = typeof(FileListPage), Path = "/fileList/public" });
+            m_routes.Add(new RouteItem() { Name = "privateFile", PageType = typeof(FileListPage), Path = "/fileList/private" });
             m_routes.Add(new RouteItem() { Name = "download", PageType = typeof(DownloadPage), Path = "/download" });
         }
 

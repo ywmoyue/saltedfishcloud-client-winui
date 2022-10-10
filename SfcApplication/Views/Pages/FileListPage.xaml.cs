@@ -23,6 +23,7 @@ using SfcApplication.Models.Configs;
 using SfcApplication.Models.Mappers;
 using SfcApplication.Extensions;
 using SfcApplication.HostedServices;
+using SfcApplication.Models.Common;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,13 +35,14 @@ namespace SfcApplication.Views.Pages
     /// </summary>
     public sealed partial class FileListPage : RoutePage
     {
-        private DiskFileClient m_diskFileClient;
+        private readonly DiskFileClient m_diskFileClient;
         private readonly RouteService m_routeService;
         private readonly IMapper m_mapper;
         private readonly ClientConfig m_config;
         private readonly DownloadHostedService m_downloadHostedService;
+        private readonly UserHostedService m_userHostedService;
 
-        public FileListPage(DiskFileClient diskFileClient, RouteService mRouteService, IMapper mMapper, ClientConfig config, DownloadHostedService downloadHostedService)
+        public FileListPage(DiskFileClient diskFileClient, RouteService mRouteService, IMapper mMapper, ClientConfig config, DownloadHostedService downloadHostedService, UserHostedService userHostedService)
         {
             m_diskFileClient = diskFileClient;
             m_routeService = mRouteService;
@@ -48,22 +50,30 @@ namespace SfcApplication.Views.Pages
             m_config = config;
             this.InitializeComponent();
             m_downloadHostedService = downloadHostedService;
+            m_userHostedService = userHostedService;
         }
 
         public override async void OnNavigated(object query)
         {
             if (query == null)
             {
-                if(ViewModel.Paths!=null) ViewModel.Paths.Clear();
-                else ViewModel.Paths = new ObservableCollection<string>();
-                ViewModel.Paths.Add("根");
+                InitPaths();
+                ViewModel.UserId = 0;
             }
             else
             {
-                var paths = query as List<string>;
+                var navigatedQuery = query as FileListNavigatedQuery;
+                if (navigatedQuery.Paths == null)
                 {
+                    InitPaths();
+                }
+                else
+                {
+                    var paths = navigatedQuery.Paths;
                     ViewModel.Paths = new ObservableCollection<string>(paths);
                 }
+                
+                ViewModel.UserId = navigatedQuery.UserId;
             }
             await InitData();
         }
@@ -71,15 +81,22 @@ namespace SfcApplication.Views.Pages
         public async Task InitData()
         {
             var path = ViewModel.Paths.GetFileUrlExceptRoot();
-            var diskFileInfos = await m_diskFileClient.GetFileList(path);
+            var diskFileInfos = await m_diskFileClient.GetFileList(path, ViewModel.UserId, m_userHostedService.Token);
             var mappers = m_mapper.Map<List<DiskFileInfoMapper>>(diskFileInfos);
             mappers.ForEach(x=>
             {
                 x.Paths = ViewModel.Paths.ToList();
                 x.BaseUrl = m_config.BaseUrl;
-                x.UserId = 0;
+                x.UserId = ViewModel.UserId;
             });
             ViewModel.DiskFileInfos = new ObservableCollection<DiskFileInfoMapper>(mappers);
+        }
+
+        private void InitPaths()
+        {
+            if (ViewModel.Paths != null) ViewModel.Paths.Clear();
+            else ViewModel.Paths = new ObservableCollection<string>();
+            ViewModel.Paths.Add("根");
         }
 
         private async void FileItemPanel_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
@@ -112,7 +129,8 @@ namespace SfcApplication.Views.Pages
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
         {
             var fileInfo = ViewModel.SelectedDiskFileInfos.FirstOrDefault();
-            await m_downloadHostedService.Download(fileInfo);
+            await m_downloadHostedService.Download(fileInfo, token: m_userHostedService.Token,
+                userId: ViewModel.UserId);
         }
     }
 }

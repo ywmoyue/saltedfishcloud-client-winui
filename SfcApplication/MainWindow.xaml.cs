@@ -29,20 +29,20 @@ namespace SfcApplication
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        private UserClient m_userClient;
+        private UserHostedService m_userHostedService;
         private DiskFileClient m_diskFileClient;
         private IServiceProvider m_serviceProvider;
         private readonly RouteService m_routeService;
         private readonly DownloadHostedService m_downloadHostedService;
         private readonly ToastService m_toastService;
 
-        public MainWindow(UserClient userClient, DiskFileClient diskFileClient, HelloClient helloClient ,RouteService routeService, IServiceProvider serviceProvider, DownloadHostedService downloadHostedService, ToastService toastService)
+        public MainWindow(DiskFileClient diskFileClient, HelloClient helloClient ,RouteService routeService, IServiceProvider serviceProvider, DownloadHostedService downloadHostedService, ToastService toastService, UserHostedService userHostedService)
         {
-            m_userClient = userClient;
             m_diskFileClient = diskFileClient;
             m_serviceProvider = serviceProvider;
             m_downloadHostedService = downloadHostedService;
             m_toastService = toastService;
+            m_userHostedService = userHostedService;
             m_routeService = routeService;
             this.InitializeComponent();
             m_routeService.Init(MainFrame);
@@ -60,6 +60,15 @@ namespace SfcApplication
         {
             var item = args.SelectedItem as NavMenuItem;
             if (item.Path == null) return;
+            if (item.Path == "/fileList/private")
+            {
+                var query = new FileListNavigatedQuery()
+                {
+                    UserId = m_userHostedService.User.Id
+                };
+                m_routeService.Push(item.Path, query);
+                return;
+            }
             m_routeService.Push(item.Path);
         }
     }
