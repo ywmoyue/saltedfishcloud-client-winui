@@ -15,6 +15,7 @@ namespace SfcApplication.HostedServices
     {
         private readonly LocalFileIOService m_localFileIoService;
         private readonly UserClient m_userClient;
+        public event EventHandler UserLogined;
 
         public string Token { get; set; }
         public User User { get; set; }
@@ -30,6 +31,10 @@ namespace SfcApplication.HostedServices
             Token = await GetLocalToken();
             if (string.IsNullOrEmpty(Token)) return;
             User = await GetUserInfo();
+            if (User != null)
+            {
+                UserLogined?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -48,7 +53,7 @@ namespace SfcApplication.HostedServices
             Token = data;
             await m_localFileIoService.SetUserToken(data);
             await GetUserInfo();
-
+            UserLogined?.Invoke(this, EventArgs.Empty);
             return (true, null);
         }
 

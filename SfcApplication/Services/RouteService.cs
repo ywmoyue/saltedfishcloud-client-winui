@@ -38,6 +38,7 @@ namespace SfcApplication.Services
         public void Push(string path, object query = null)
         {
             var route = m_routes.FirstOrDefault(x => x.Path == path);
+            if (route == null) return;
             var page = m_serviceProvider.GetRequiredService(route.PageType) as RoutePage;
             m_frame.Content = page;
             CurrentRoute = route;

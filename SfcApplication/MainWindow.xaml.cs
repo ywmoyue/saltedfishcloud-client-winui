@@ -38,6 +38,7 @@ namespace SfcApplication
 
         public MainWindow(DiskFileClient diskFileClient, HelloClient helloClient ,RouteService routeService, IServiceProvider serviceProvider, DownloadHostedService downloadHostedService, ToastService toastService, UserHostedService userHostedService)
         {
+            Title = "咸鱼云网盘";
             m_diskFileClient = diskFileClient;
             m_serviceProvider = serviceProvider;
             m_downloadHostedService = downloadHostedService;
@@ -49,6 +50,23 @@ namespace SfcApplication
             m_toastService.Init(RootElement);
             Closed += MainWindow_Closed;
             m_routeService.Push("/fileList/public");
+            m_userHostedService.UserLogined += UserHostedService_UserLogined;
+        }
+
+        private void UserHostedService_UserLogined(object sender, EventArgs e)
+        {
+            var navItems=ViewModel.NavFullMenu.Where(x => x.Name == "登陆" || x.Name == "注册");
+            foreach (var navMenuItem in navItems)
+            {
+                navMenuItem.Hidden = true;
+            }
+
+            navItems = ViewModel.NavFullMenu.Where(x => x.Name == "用户中心");
+            foreach (var navMenuItem in navItems)
+            {
+                navMenuItem.Hidden = false;
+            }
+            ViewModel.UpdateNavMenu();
         }
 
         private async void MainWindow_Closed(object sender, WindowEventArgs args)

@@ -7,15 +7,23 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    xmlns:viewmodel="using:SfcApplication.ViewModels">
+    xmlns:viewmodel="using:SfcApplication.ViewModels"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:media="using:CommunityToolkit.WinUI.UI.Media">
 
     <Page.DataContext>
         <viewmodel:LoginPageViewModel x:Name="ViewModel"></viewmodel:LoginPageViewModel>
     </Page.DataContext>
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Grid MaxWidth="1000" MaxHeight="500" Margin="0,0,0,300">
+        <Grid MaxWidth="1000" MaxHeight="500" Margin="0,0,0,300" BorderThickness="1" Padding="50">
+            <Grid.Background>
+                <media:AcrylicBrush
+                    TintColor="DarkCyan"
+                    TintOpacity="0.2"
+                    BlurAmount="12"/>
+            </Grid.Background>
             <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
@@ -24,14 +32,15 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock >登录账号</TextBlock>
+            <TextBlock FontSize="30"  Grid.ColumnSpan="2">登录账号</TextBlock>
 
             <TextBlock Grid.Row="1">用户名</TextBlock>
             <TextBlock Grid.Row="2" >密码</TextBlock>
             <Button Grid.Row="3" Name="LoginBtn" Click="LoginBtn_OnClick">登录</Button>
-            <TextBox Grid.Row="1" Grid.Column="1" Name="UserNameTextBox" MinWidth="200" Text="{Binding UserName, Mode=TwoWay}"></TextBox>
-            <PasswordBox Grid.Row="2" Grid.Column="1" Name="PasswdTextBox" MinWidth="200" Password="{Binding Password, Mode=TwoWay}"></PasswordBox>
+            <TextBox Grid.Row="1" Grid.Column="1" Name="UserNameTextBox" Width="300" Text="{Binding UserName, Mode=TwoWay}"></TextBox>
+            <PasswordBox Grid.Row="2" Grid.Column="1" Name="PasswdTextBox" Width="300" Password="{Binding Password, Mode=TwoWay}"></PasswordBox>
         </Grid>
+
     </StackPanel>
 
 </extensions:RoutePage>
