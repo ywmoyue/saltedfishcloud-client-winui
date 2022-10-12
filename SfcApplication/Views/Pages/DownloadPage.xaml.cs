@@ -50,9 +50,17 @@ namespace SfcApplication.Views.Pages
             m_downloadHostedService.DownloadItemAdd += DownloadHostedService_DownloadItemAdd;
             m_downloadHostedService.DownloadItemFinish += DownloadHostedService_DownloadItemFinish;
             DownloadedView.OpenFolderToFile += OpenFolderToFile;
+            DownloadedView.DeleteDownloadItem += DeleteDownloadItem;
             DownloadingView.OpenFolderToFile += OpenFolderToFile;
             DownloadingView.DownloadPlay += DownloadingView_DownloadPlay;
             DownloadingView.DownloadPause += DownloadingView_DownloadPause;
+            DownloadingView.DeleteDownloadItem += DeleteDownloadItem;
+        }
+
+        private void DeleteDownloadItem(object sender, DownloadItemViewModel e)
+        {
+            m_downloadHostedService.Remove(e.Id);
+            ViewModel.DownloadItemList.Remove(e);
         }
 
         private void DownloadingView_DownloadPause(object sender, DownloadItemViewModel e)

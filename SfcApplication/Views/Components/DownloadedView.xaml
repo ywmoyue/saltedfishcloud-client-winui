@@ -61,7 +61,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="5" Grid.RowSpan="2" Margin="20,0,10,0" HorizontalAlignment="Center">
                             <!--控制栏-->
-                            <AppBarButton Icon="Delete" LabelPosition="Collapsed"/>
+                            <AppBarButton Icon="Delete" LabelPosition="Collapsed" x:Name="DeleteBtn" Click="DeleteBtn_OnClick"/>
                             <AppBarButton Icon="MoveToFolder" LabelPosition="Collapsed" x:Name="OpenFolderBtn" Click="OpenFolderBtn_OnClick"/>
                         </StackPanel>
                     </Grid>

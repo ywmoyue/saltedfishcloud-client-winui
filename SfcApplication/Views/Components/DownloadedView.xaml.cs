@@ -25,7 +25,8 @@ namespace SfcApplication.Views.Components
 {
     public sealed partial class DownloadedView : UserControl
     {
-        public event EventHandler<DownloadItemViewModel> OpenFolderToFile; 
+        public event EventHandler<DownloadItemViewModel> OpenFolderToFile;
+        public event EventHandler<DownloadItemViewModel> DeleteDownloadItem;
 
         public DownloadedView()
         {
@@ -37,6 +38,13 @@ namespace SfcApplication.Views.Components
             var view = sender as FrameworkElement;
             var item = view.DataContext as DownloadItemViewModel;
             OpenFolderToFile?.Invoke(this, item);
+        }
+
+        private void DeleteBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var view = sender as FrameworkElement;
+            var item = view.DataContext as DownloadItemViewModel;
+            DeleteDownloadItem?.Invoke(this, item);
         }
     }
 }

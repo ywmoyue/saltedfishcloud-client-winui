@@ -30,6 +30,7 @@ namespace SfcApplication.Views.Components
         public event EventHandler<DownloadItemViewModel> OpenFolderToFile;
         public event EventHandler<DownloadItemViewModel> DownloadPlay;
         public event EventHandler<DownloadItemViewModel> DownloadPause;
+        public event EventHandler<DownloadItemViewModel> DeleteDownloadItem;
 
         public DownloadingView()
         {
@@ -54,6 +55,13 @@ namespace SfcApplication.Views.Components
             var view = sender as FrameworkElement;
             var item = view.DataContext as DownloadItemViewModel;
             OpenFolderToFile?.Invoke(this, item);
+        }
+
+        private void DeleteBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var view = sender as FrameworkElement;
+            var item = view.DataContext as DownloadItemViewModel;
+            DeleteDownloadItem?.Invoke(this, item);
         }
     }
 }
