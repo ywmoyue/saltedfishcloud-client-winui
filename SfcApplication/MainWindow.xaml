@@ -17,6 +17,8 @@
                              SelectionChanged="MainNavView_OnSelectionChanged"
                              MenuItemsSource="{Binding NavMenu, Mode=OneWay}"
                              SelectedItem="{Binding NavMenuSelectedItem}"
+                             IsBackEnabled="False"
+                             IsBackButtonVisible="Collapsed"
                              IsSettingsVisible="False"
                              OpenPaneLength="200"
                              IsRightTapEnabled="True">

@@ -68,5 +68,11 @@ namespace SfcApplication.HostedServices
             var token = await m_localFileIoService.GetUserToken();
             return token;
         }
+
+        public async Task<QuotaUsed> GetQuotaUsed()
+        {
+            var quotaUsed = await m_userClient.GetQuatoUsed(Token);
+            return quotaUsed;
+        }
     }
 }

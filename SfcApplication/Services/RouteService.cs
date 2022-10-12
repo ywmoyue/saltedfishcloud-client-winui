@@ -33,6 +33,7 @@ namespace SfcApplication.Services
             m_routes.Add(new RouteItem() { Name = "publicFile", PageType = typeof(FileListPage), Path = "/fileList/public" });
             m_routes.Add(new RouteItem() { Name = "privateFile", PageType = typeof(FileListPage), Path = "/fileList/private" });
             m_routes.Add(new RouteItem() { Name = "download", PageType = typeof(DownloadPage), Path = "/download" });
+            m_routes.Add(new RouteItem() { Name = "userSpace", PageType = typeof(UserSpacePage), Path = "/userSpace" });
         }
 
         public void Push(string path, object query = null)

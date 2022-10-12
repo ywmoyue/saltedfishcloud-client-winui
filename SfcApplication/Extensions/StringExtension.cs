@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,11 @@ namespace SfcApplication.Extensions
         public static string UrlToPath(this string url)
         {
             return url.Replace("/","\\");
+        }
+
+        public static BitmapImage GetBitmapImage(this string uri)
+        {
+            return new BitmapImage(new Uri(uri));
         }
     }
 }

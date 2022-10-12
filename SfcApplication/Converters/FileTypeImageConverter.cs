@@ -9,62 +9,65 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using SfcApplication.Extensions;
 using SfcApplication.Models.Entities;
 
 namespace SfcApplication.Converters
 {
     public class FileTypeImageConverter
     {
-        public static ImageSource Convert(string suffix, string name,bool dir,List<string> paths,string md5,string baseUrl,int userId)
+        public static ImageSource Convert(string suffix, string name,bool dir,List<string> paths,string md5,string imageUrl,int userId)
         {
             var appPath = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             var iconDir = new DirectoryInfo($"{appPath}/Assets/icon");
             if (dir)
             {
-                return GetBitmapImage($"{iconDir.FullName}/dir.png");
+                return $"{iconDir.FullName}/dir.png".GetBitmapImage();
             }
 
             switch (suffix.ToLower())
             {
                 case "apk":
-                    return GetBitmapImage($"{iconDir.FullName}/android.png");
+                    return $"{iconDir.FullName}/android.png".GetBitmapImage();
                 case "mp3":
                 case "wav":
-                    return GetBitmapImage($"{iconDir.FullName}/audio.png");
+                    return $"{iconDir.FullName}/audio.png".GetBitmapImage();
                 case "cs":
                 case "js":
                 case "java":
-                    return GetBitmapImage($"{iconDir.FullName}/code.png");
+                    return $"{iconDir.FullName}/code.png".GetBitmapImage();
                 case "doc":
                 case "docx":
-                    return GetBitmapImage($"{iconDir.FullName}/doc.png");
+                    return $"{iconDir.FullName}/doc.png".GetBitmapImage();
                 case "xls":
                 case "xlsx":
-                    return GetBitmapImage($"{iconDir.FullName}/excel.png");
+                    return $"{iconDir.FullName}/excel.png".GetBitmapImage();
                 case "exe":
-                    return GetBitmapImage($"{iconDir.FullName}/exe.png");
+                    return $"{iconDir.FullName}/exe.png".GetBitmapImage();
                 case "txt":
                 case "md":
-                    return GetBitmapImage($"{iconDir.FullName}/txt.png");
+                    return $"{iconDir.FullName}/txt.png".GetBitmapImage();
                 case "iso":
-                    return GetBitmapImage($"{iconDir.FullName}/iso.png");
+                    return $"{iconDir.FullName}/iso.png".GetBitmapImage();
                 case "jpg":
                 case "png":
                 case "gif":
-                    var img = GetBitmapImage($"{baseUrl}resource/{userId}/thumbnail/{md5}?type={suffix}");
+                    var url = imageUrl.ReplaceParameter("userId", userId + "").ReplaceParameter("md5", md5)
+                        .ReplaceParameter("suffix", suffix);
+                    var img = url.GetBitmapImage();
                     return img;
                 case "ppt":
                 case "pptx":
-                    return GetBitmapImage($"{iconDir.FullName}/ppt.png");
+                    return $"{iconDir.FullName}/ppt.png".GetBitmapImage();
                 case "mp4":
-                    return GetBitmapImage($"{iconDir.FullName}/video.png");
+                    return $"{iconDir.FullName}/video.png".GetBitmapImage();
                 case "rar":
                 case "zip":
                 case "gz":
                 case "7z":
-                    return GetBitmapImage($"{iconDir.FullName}/zipped.png");
+                    return $"{iconDir.FullName}/zipped.png".GetBitmapImage();
             }
-            return GetBitmapImage($"{iconDir.FullName}/file.png");
+            return $"{iconDir.FullName}/file.png".GetBitmapImage();
         }
 
         public static ImageSource Convert(string suffix, bool dir)
@@ -73,54 +76,49 @@ namespace SfcApplication.Converters
             var iconDir = new DirectoryInfo($"{appPath}/Assets/icon");
             if (dir)
             {
-                return GetBitmapImage($"{iconDir.FullName}/dir.png");
+                return $"{iconDir.FullName}/dir.png".GetBitmapImage();
             }
 
             switch (suffix.ToLower())
             {
                 case "apk":
-                    return GetBitmapImage($"{iconDir.FullName}/android.png");
+                    return $"{iconDir.FullName}/android.png".GetBitmapImage();
                 case "mp3":
                 case "wav":
-                    return GetBitmapImage($"{iconDir.FullName}/audio.png");
+                    return $"{iconDir.FullName}/audio.png".GetBitmapImage();
                 case "cs":
                 case "js":
                 case "java":
-                    return GetBitmapImage($"{iconDir.FullName}/code.png");
+                    return $"{iconDir.FullName}/code.png".GetBitmapImage();
                 case "doc":
                 case "docx":
-                    return GetBitmapImage($"{iconDir.FullName}/doc.png");
+                    return $"{iconDir.FullName}/doc.png".GetBitmapImage();
                 case "xls":
                 case "xlsx":
-                    return GetBitmapImage($"{iconDir.FullName}/excel.png");
+                    return $"{iconDir.FullName}/excel.png".GetBitmapImage();
                 case "exe":
-                    return GetBitmapImage($"{iconDir.FullName}/exe.png");
+                    return $"{iconDir.FullName}/exe.png".GetBitmapImage();
                 case "txt":
                 case "md":
-                    return GetBitmapImage($"{iconDir.FullName}/txt.png");
+                    return $"{iconDir.FullName}/txt.png".GetBitmapImage();
                 case "iso":
-                    return GetBitmapImage($"{iconDir.FullName}/iso.png");
+                    return $"{iconDir.FullName}/iso.png".GetBitmapImage();
                 case "jpg":
                 case "png":
                 case "gif":
-                    return GetBitmapImage($"{iconDir.FullName}/picture.png");
+                    return $"{iconDir.FullName}/picture.png".GetBitmapImage();
                 case "ppt":
                 case "pptx":
-                    return GetBitmapImage($"{iconDir.FullName}/ppt.png");
+                    return $"{iconDir.FullName}/ppt.png".GetBitmapImage();
                 case "mp4":
-                    return GetBitmapImage($"{iconDir.FullName}/video.png");
+                    return $"{iconDir.FullName}/video.png".GetBitmapImage();
                 case "rar":
                 case "zip":
                 case "gz":
                 case "7z":
-                    return GetBitmapImage($"{iconDir.FullName}/zipped.png");
+                    return $"{iconDir.FullName}/zipped.png".GetBitmapImage();
             }
-            return GetBitmapImage($"{iconDir.FullName}/file.png");
-        }
-
-        private static BitmapImage GetBitmapImage(string uri)
-        {
-            return new BitmapImage(new Uri(uri));
+            return $"{iconDir.FullName}/file.png".GetBitmapImage();
         }
     }
 }

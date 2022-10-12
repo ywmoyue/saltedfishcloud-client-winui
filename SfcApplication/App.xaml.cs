@@ -15,7 +15,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SfcApplication.Clients;
@@ -28,6 +27,8 @@ using System.Threading.Tasks;
 using SfcApplication.HostedServices;
 using Downloader;
 using SfcApplication.Views.Components;
+using Windows.Storage;
+using Microsoft.Extensions.Configuration;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -41,7 +42,9 @@ namespace SfcApplication
     {
         private readonly IHost m_host;
         private IConfiguration m_configuration;
+        private string m_configurationPath;
         private Window m_window;
+        public IntPtr WindowHandle;
 
         public App()
         {
@@ -55,8 +58,16 @@ namespace SfcApplication
 
         private void InitConfiguration()
         {
+            var packagePath = Package.Current.InstalledLocation.Path;
+            var localConfigPath = ApplicationData.Current.LocalFolder.Path+"\\config";
+            m_configurationPath= $"{localConfigPath}\\appsettings.json";
+            if (!File.Exists(m_configurationPath))
+            {
+                if (!Directory.Exists(localConfigPath)) Directory.CreateDirectory(localConfigPath);
+                File.Copy($"{packagePath}/appsettings.template.json",m_configurationPath);
+            }
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Package.Current.InstalledLocation.Path)
+                .SetBasePath(localConfigPath)
                 .AddJsonFile("appsettings.json", optional: false);
             m_configuration = builder.Build();
         }
@@ -64,9 +75,13 @@ namespace SfcApplication
         private void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
             var clientConfig = m_configuration.GetSection(nameof(ClientConfig)).Get<ClientConfig>();
+            clientConfig.ConfigPath = m_configurationPath;
             var downloadConfig = m_configuration.GetSection(nameof(DownloadConfiguration)).Get<DownloadConfiguration>();
+            var userConfig = m_configuration.GetSection(nameof(UserConfig)).Get<UserConfig>();
+            services.AddSingleton(m_configuration);
             services.AddSingleton(clientConfig);
             services.AddSingleton(downloadConfig);
+            services.AddSingleton(userConfig);
             services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(expression =>
                 expression.AddMaps(GetType().Assembly))));
             services.AddScoped<HelloClient>();
@@ -74,11 +89,13 @@ namespace SfcApplication
             services.AddScoped<DiskFileClient>();
             services.AddSingleton<RouteService>();
             services.AddSingleton<ToastService>();
+            services.AddSingleton<ConfigService>();
             services.AddScoped<LocalFileIOService>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<FileListPage>();
             services.AddSingleton<LoginPage>();
             services.AddSingleton<DownloadPage>();
+            services.AddSingleton<UserSpacePage>();
             //services.AddScoped<DownloadingView>();
             services.AddSingleton<DownloadHostedService>();
             services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<DownloadHostedService>());
@@ -92,6 +109,7 @@ namespace SfcApplication
             StartHostedServices(m_host.Services).ContinueWith(task => Console.WriteLine(task.Exception));
             // start window
             m_window = m_host.Services.GetService<MainWindow>();
+            WindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
             m_window?.Activate();
         }
 

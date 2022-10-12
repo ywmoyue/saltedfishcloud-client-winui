@@ -38,7 +38,7 @@ namespace SfcApplication.ViewModels
             NavFullMenu.Add(new NavMenuItem("私人网盘", "/fileList/private"));
             NavFullMenu.Add(new NavMenuItem("登陆", "/login"));
             NavFullMenu.Add(new NavMenuItem("注册"));
-            NavFullMenu.Add(new NavMenuItem("用户中心","", hidden:true));
+            NavFullMenu.Add(new NavMenuItem("用户中心","/userSpace", hidden:true));
             NavFullMenu.Add(new NavMenuItem("下载管理","/download"));
         }
     }

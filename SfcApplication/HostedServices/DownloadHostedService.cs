@@ -56,7 +56,7 @@ namespace SfcApplication.HostedServices
         public async Task Download(DiskFileInfoMapper diskFileInfo,string downloadPath="",int userId=0,string token=null)
         {
             if (string.IsNullOrEmpty(downloadPath))
-                downloadPath = m_clientConfig.DefaultDownloadPath;
+                downloadPath = m_downloadConfig.TempDirectory;
             var path = diskFileInfo.Paths.GetFileUrlExceptRoot();
             var url = ConstructDownloadUrl(path, diskFileInfo.Name,userId);
             downloadPath += path;

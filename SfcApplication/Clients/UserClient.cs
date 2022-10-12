@@ -57,6 +57,17 @@ namespace SfcApplication.Clients
                 .GetAsync()
                 .ReceiveJson<BaseBean<User>>();
             return result.Data;
-        } 
+        }
+
+        public async Task<QuotaUsed> GetQuatoUsed(string token)
+        {
+            var url = m_clientConfig.BaseUrl + m_clientConfig.OpenApi.GetQuotaUsed;
+
+            var result = await url
+                .WithHeader("Token", token)
+                .GetAsync()
+                .ReceiveJson<BaseBean<QuotaUsed>>();
+            return result.Data;
+        }
     }
 }

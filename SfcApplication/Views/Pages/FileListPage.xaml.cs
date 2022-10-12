@@ -86,7 +86,7 @@ namespace SfcApplication.Views.Pages
             mappers.ForEach(x=>
             {
                 x.Paths = ViewModel.Paths.ToList();
-                x.BaseUrl = m_config.BaseUrl;
+                x.BaseUrl = m_config.BaseUrl+m_config.OpenApi.GetThumbnailImage;
                 x.UserId = ViewModel.UserId;
             });
             ViewModel.DiskFileInfos = new ObservableCollection<DiskFileInfoMapper>(mappers);

@@ -9,16 +9,20 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     xmlns:viewmodel="using:SfcApplication.ViewModels"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:media="using:CommunityToolkit.WinUI.UI.Media">
+    xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI">
 
     <Page.DataContext>
         <viewmodel:LoginPageViewModel x:Name="ViewModel"></viewmodel:LoginPageViewModel>
     </Page.DataContext>
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid MaxWidth="1000" MaxHeight="500" Margin="0,0,0,300" BorderThickness="1" Padding="50">
+            <ui:Effects.Shadow>
+                <media:AttachedCardShadow Color="Black" Offset="4,4" Opacity="1"/>
+            </ui:Effects.Shadow>
             <Grid.Background>
                 <media:AcrylicBrush
-                    TintColor="DarkCyan"
+                    TintColor="White"
                     TintOpacity="0.2"
                     BlurAmount="12"/>
             </Grid.Background>

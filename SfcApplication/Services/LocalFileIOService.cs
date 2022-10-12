@@ -9,6 +9,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Newtonsoft.Json.Linq;
 using SfcApplication.Converters;
 
 namespace SfcApplication.Services
@@ -46,18 +47,25 @@ namespace SfcApplication.Services
             return downloadTaskList;
         }
 
-        //private async Task Write(List<string> folderNames, string fileName, object data)
-        //{
-        //    StorageFolder currentFolder = m_localFolder;
-        //    foreach (var fName in folderNames)
-        //    {
-        //        currentFolder = await currentFolder.CreateFolderAsync(fName, CreationCollisionOption.OpenIfExists);
-        //    }
-
-        //    var file = await currentFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-        //    string dataStr = JsonConvert.SerializeObject(data);
-        //    await FileIO.WriteTextAsync(file, dataStr);
-        //}
+        public async Task SetAppSettingsConfig(List<string> paths,object value)
+        {
+            var configPatg = m_clientConfig.ConfigPath;
+            var file = new FileInfo(configPatg);
+            var readStream = file.OpenText();
+            var appSettingsText = await readStream.ReadToEndAsync();
+            readStream.Close();
+            var configRoot = JObject.Parse(appSettingsText);
+            var configNode = configRoot as JToken;
+            foreach (var path in paths)
+            {
+                configNode = configNode[path];
+            }
+            configNode.Replace(JToken.FromObject(value));
+            appSettingsText = configRoot.ToString();
+            var writeStream = file.CreateText();
+            await writeStream.WriteAsync(appSettingsText);
+            writeStream.Close();
+        }
 
         private async Task Write(List<string> folderNames, string fileName, object data)
         { 
@@ -76,23 +84,6 @@ namespace SfcApplication.Services
             await stream.WriteAsync(dataStr);
             stream.Close();
         }
-
-        //private async Task<T> Read<T>(List<string> folderNames, string fileName)
-        //{
-        //    StorageFolder currentFolder = m_localFolder;
-        //    foreach (var fName in folderNames)
-        //    {
-        //        var fI = (await currentFolder.TryGetItemAsync(fName));
-        //        if (fI == null) return default;
-        //        currentFolder = (StorageFolder)fI;
-        //    }
-        //    var fileI = await currentFolder.TryGetItemAsync(fileName);
-        //    if (fileI == null) return default;
-        //    var file = (StorageFile)fileI;
-        //    var dataStr = await FileIO.ReadTextAsync(file);
-        //    var data = JsonConvert.DeserializeObject<T>(dataStr);
-        //    return data;
-        //}
 
         private async Task<T> Read<T>(List<string> folderNames, string fileName)
         {
