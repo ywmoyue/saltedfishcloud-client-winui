@@ -21,8 +21,13 @@
         <MenuFlyout x:Key="FileListRightClickMenu" x:Name="FileListRightClickMenu">
             <MenuFlyoutItem 
                 x:Name="DownloadBtn"
+                Visibility="{x:Bind converters:VisibilityConverter.NoValueToHidden(ViewModel.SelectedDiskFileInfos) ,Mode=OneWay}"
                 Click="DownloadBtn_Click"
                 Text="下载"/>
+            <MenuFlyoutItem 
+                x:Name="RefreshBtn"
+                Click="RefreshBtn_OnClick"
+                Text="刷新"/>
         </MenuFlyout>
     </Page.Resources>
     
@@ -38,7 +43,8 @@
             CanDragItems="True" 
             SelectionMode="Extended" 
             Grid.Row="1" 
-            RightTapped="FileInfoGridView_RightTapped">
+            RightTapped="FileInfoGridView_RightTapped"
+            Tapped="FileInfoGridView_OnTapped">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="mappers:DiskFileInfoMapper">
                     <StackPanel Orientation="Vertical" Width="150" Height="150" Name="FileItemPanel" DoubleTapped="FileItemPanel_OnDoubleTapped">

@@ -35,22 +35,24 @@ namespace SfcApplication.Views.Pages
     /// </summary>
     public sealed partial class FileListPage : RoutePage
     {
-        private readonly DiskFileClient m_diskFileClient;
         private readonly RouteService m_routeService;
+        private readonly DiskFileService m_diskFileService;
         private readonly IMapper m_mapper;
         private readonly ClientConfig m_config;
         private readonly DownloadHostedService m_downloadHostedService;
         private readonly UserHostedService m_userHostedService;
+        private readonly ToastService m_toastService;
 
-        public FileListPage(DiskFileClient diskFileClient, RouteService mRouteService, IMapper mMapper, ClientConfig config, DownloadHostedService downloadHostedService, UserHostedService userHostedService)
+        public FileListPage(RouteService mRouteService, IMapper mMapper, ClientConfig config, DownloadHostedService downloadHostedService, UserHostedService userHostedService, ToastService toastService, DiskFileService diskFileService)
         {
-            m_diskFileClient = diskFileClient;
             m_routeService = mRouteService;
             m_mapper = mMapper;
             m_config = config;
             this.InitializeComponent();
             m_downloadHostedService = downloadHostedService;
             m_userHostedService = userHostedService;
+            m_toastService = toastService;
+            m_diskFileService = diskFileService;
         }
 
         public override async void OnNavigated(object query)
@@ -81,7 +83,7 @@ namespace SfcApplication.Views.Pages
         public async Task InitData()
         {
             var path = ViewModel.Paths.GetFileUrlExceptRoot();
-            var diskFileInfos = await m_diskFileClient.GetFileList(path, ViewModel.UserId, m_userHostedService.Token);
+            var diskFileInfos = await m_diskFileService.GetFileList(path, ViewModel.UserId);
             var mappers = m_mapper.Map<List<DiskFileInfoMapper>>(diskFileInfos);
             mappers.ForEach(x=>
             {
@@ -123,14 +125,56 @@ namespace SfcApplication.Views.Pages
 
         private void FileInfoGridView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
+            if (ViewModel.SelectedDiskFileInfos==null||!ViewModel.SelectedDiskFileInfos.Any())
+            {
+                var originalSource = e.OriginalSource as FrameworkElement;
+                var fileInfo = originalSource.DataContext as DiskFileInfoMapper;
+                if (fileInfo != null)
+                {
+                    FileInfoGridView.SelectedItems.Add(fileInfo);
+                }
+            }
+
             FileListRightClickMenu.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
         }
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
         {
-            var fileInfo = ViewModel.SelectedDiskFileInfos.FirstOrDefault();
-            await m_downloadHostedService.Download(fileInfo, token: m_userHostedService.Token,
-                userId: ViewModel.UserId);
+            foreach (var fileInfo in ViewModel.SelectedDiskFileInfos)
+            {
+                if (!fileInfo.Dir)
+                {
+                    await m_downloadHostedService.Download(fileInfo, token: m_userHostedService.Token,
+                        userId: ViewModel.UserId);
+                    m_toastService.Show($"文件{fileInfo.Name}已加入下载");
+                    return;
+                }
+
+                var fileList =
+                    await m_diskFileService.GetFolderSubFileList(fileInfo.Paths, fileInfo.Name, ViewModel.UserId);
+                var mappers = m_mapper.Map<List<DiskFileInfoMapper>>(fileList);
+                foreach (var diskFileInfo in mappers)
+                {
+                    await m_downloadHostedService.Download(diskFileInfo, token: m_userHostedService.Token,
+                        userId: ViewModel.UserId);
+                }
+                m_toastService.Show($"目录{fileInfo.Name}已加入下载");
+            }
+        }
+
+        private void FileInfoGridView_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var originalSource = e.OriginalSource as FrameworkElement;
+            var fileInfo = originalSource.DataContext as DiskFileInfoMapper;
+            if (fileInfo == null)
+            {
+                FileInfoGridView.SelectedItems.Clear();
+            }
+        }
+
+        private async void RefreshBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.InitData();
         }
     }
 }

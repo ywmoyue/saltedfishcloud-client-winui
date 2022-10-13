@@ -17,7 +17,7 @@ namespace SfcApplication.ViewModels
 
         public ObservableCollection<string> Paths { get; set; }
 
-        public List<DiskFileInfoMapper> SelectedDiskFileInfos { get; set; }
+        public ObservableCollection<DiskFileInfoMapper> SelectedDiskFileInfos { get; set; }
         public int UserId { get; set; }
 
         public ICommand SetSelectedDiskFileInfos
@@ -25,7 +25,7 @@ namespace SfcApplication.ViewModels
             get
             {
                 return new SelectedCommand((s) => 
-                    SelectedDiskFileInfos=s.ToList()
+                    SelectedDiskFileInfos=new ObservableCollection<DiskFileInfoMapper>(s)
                 );
             }
         }

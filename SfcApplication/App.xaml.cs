@@ -87,6 +87,7 @@ namespace SfcApplication
             services.AddScoped<HelloClient>();
             services.AddScoped<UserClient>();
             services.AddScoped<DiskFileClient>();
+            services.AddScoped<DiskFileService>();
             services.AddSingleton<RouteService>();
             services.AddSingleton<ToastService>();
             services.AddSingleton<ConfigService>();

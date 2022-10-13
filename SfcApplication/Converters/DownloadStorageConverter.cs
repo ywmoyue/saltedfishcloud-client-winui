@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace SfcApplication.Converters
 {
-    public class DownloadStorageConverter:JsonConverter<IStorage>
+    public class DownloadStorageConverter : JsonConverter<IStorage>
     {
         #region Overrides of JsonConverter<IStorage>
 

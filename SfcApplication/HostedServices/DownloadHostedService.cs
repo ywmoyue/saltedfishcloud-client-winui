@@ -61,6 +61,10 @@ namespace SfcApplication.HostedServices
                 downloadPath = m_downloadConfig.TempDirectory;
             var path = diskFileInfo.Paths.GetFileUrlExceptRoot();
             var url = ConstructDownloadUrl(path, diskFileInfo.Name, userId);
+            if (downloadPath[downloadPath.Length - 1] != '/')
+            {
+                downloadPath = downloadPath + '/';
+            }
             downloadPath += path;
             var config = Clone.ObjectGraph(m_downloadConfig);
             if (!string.IsNullOrEmpty(token))
@@ -90,7 +94,7 @@ namespace SfcApplication.HostedServices
             };
             m_downloadTasks.Add(downloadTask);
             DownloadItemAdd?.Invoke(this, downloadItem);
-            await downloader.StartAsync();
+            Task.Run(()=>downloader.StartAsync());
         }
 
         public void Pause(int downloadItemId)
@@ -123,17 +127,20 @@ namespace SfcApplication.HostedServices
             var filePath = "";
             if (task.Downloader == null)
             {
-                if (task.DownloadItem.Status == Models.Enums.DownloadStatus.Downloaded&& m_userConfig.IsRemoveDownloadedTaskWithFile)
+                if (task.DownloadItem.Status == Models.Enums.DownloadStatus.Downloaded && m_userConfig.IsRemoveDownloadedTaskWithFile)
                     filePath = task.DownloadPackage.FileName.UrlToPath();
-                else if(task.DownloadItem.Status != Models.Enums.DownloadStatus.Downloaded && m_userConfig.IsRemoveDownloadingTaskWithFile)
+                else if (task.DownloadItem.Status != Models.Enums.DownloadStatus.Downloaded && m_userConfig.IsRemoveDownloadingTaskWithFile && task.DownloadPackage.Chunks != null)
                     filePath = (task.DownloadPackage.Chunks[0].Storage as FileStorage)?.FileName.UrlToPath();
             }
             else
             {
-                if (task.DownloadItem.Status == Models.Enums.DownloadStatus.Downloaded&& m_userConfig.IsRemoveDownloadedTaskWithFile)
+                if (task.DownloadItem.Status == Models.Enums.DownloadStatus.Downloaded && m_userConfig.IsRemoveDownloadedTaskWithFile)
                     filePath = task.Downloader.Package.FileName.UrlToPath();
-                else if(task.DownloadItem.Status != Models.Enums.DownloadStatus.Downloaded && m_userConfig.IsRemoveDownloadingTaskWithFile)
-                    filePath = (task.Downloader.Package.Chunks[0].Storage as FileStorage)?.FileName.UrlToPath();
+                else if (task.DownloadItem.Status != Models.Enums.DownloadStatus.Downloaded &&
+                         m_userConfig.IsRemoveDownloadingTaskWithFile && task.Downloader.Package.Chunks != null)
+                    filePath = (task.Downloader.Package.Chunks[0].Storage as FileStorage)?.FileName?.UrlToPath();
+
+
                 task.Downloader.Stop();
                 task.Downloader.Dispose();
             }
@@ -160,7 +167,7 @@ namespace SfcApplication.HostedServices
         public async Task ResumeWithStart(int downloadItemId)
         {
             var task = m_downloadTasks.FirstOrDefault(x => x.DownloadItem.Id == downloadItemId);
-            task.Downloader = DownloadBuilder.Build(task.DownloadPackage, m_downloadConfig);
+            task.Downloader = DownloadBuilder.Build(task.DownloadPackage);
             InitDownloaderEvent(task.Downloader, task.DownloadItem);
             await task.Downloader.StartAsync();
         }

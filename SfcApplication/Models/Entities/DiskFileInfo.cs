@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SfcApplication.Models.Enums;
 
 namespace SfcApplication.Models.Entities
@@ -26,5 +27,8 @@ namespace SfcApplication.Models.Entities
         public string Suffix { get; set; }
 
         public bool Dir { get; set; }
+
+        [JsonIgnore]
+        public List<string> Paths { get; set; }
     }
 }
