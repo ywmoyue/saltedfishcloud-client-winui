@@ -159,7 +159,7 @@ namespace SfcApplication.HostedServices
                 if (downloadTask.Downloader == null || downloadTask.DownloadItem.Status == Models.Enums.DownloadStatus.Downloaded) continue;
                 downloadTask.DownloadPackage = downloadTask.Downloader.Package;
                 downloadTask.DownloadItem.Status = Models.Enums.DownloadStatus.Paused;
-                downloadTask.Downloader.Pause();
+                downloadTask.Downloader.Stop();
             }
             await WriteTaskToFile();
         }
