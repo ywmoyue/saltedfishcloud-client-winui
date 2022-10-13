@@ -213,6 +213,7 @@ namespace SfcApplication.HostedServices
                 }
                 else
                 {
+                    if (e.Cancelled) return;
                     downloadItem.Status = Models.Enums.DownloadStatus.Failed;
                     DownloadItemChange?.Invoke(this, downloadItem);
                 }
