@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using SfcApplication.Extensions;
-using SfcApplication.Models.Entities;
 using SfcApplication.Models.Mappers;
 
 namespace SfcApplication.ViewModels

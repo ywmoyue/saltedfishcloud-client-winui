@@ -1,15 +1,6 @@
-﻿using Newtonsoft.Json;
-using PropertyChanged;
-using SfcApplication.Models.Entities;
-using SfcApplication.Models.Enums;
+﻿using SfcApplication.Models.Enums;
 using SfcApplication.Models.Mappers;
-using SfcApplication.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SfcApplication.Models.Common
 {

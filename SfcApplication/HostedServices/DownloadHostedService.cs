@@ -3,17 +3,14 @@ using Microsoft.Extensions.Hosting;
 using SfcApplication.Extensions;
 using SfcApplication.Models.Common;
 using SfcApplication.Models.Configs;
-using SfcApplication.Models.Entities;
 using SfcApplication.Models.Mappers;
 using SfcApplication.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage;
 using NClone;
 
 namespace SfcApplication.HostedServices

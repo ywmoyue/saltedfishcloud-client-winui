@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SfcApplication.Models.Entities;
+﻿using SfcApplication.Models.Entities;
 
 namespace SfcApplication.ViewModels
 {

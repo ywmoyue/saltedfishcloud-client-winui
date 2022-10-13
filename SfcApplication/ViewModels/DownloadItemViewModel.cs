@@ -1,13 +1,8 @@
 ﻿using AutoMapper;
 using SfcApplication.Models.Common;
-using SfcApplication.Models.Entities;
 using SfcApplication.Models.Enums;
 using SfcApplication.Models.Mappers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SfcApplication.ViewModels
 {

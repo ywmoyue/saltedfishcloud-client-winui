@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage.Pickers;
+﻿using Windows.Storage.Pickers;
 using WinRT;
 
 namespace SfcApplication.Extensions
