@@ -10,8 +10,9 @@
     xmlns:viewmodel="using:SfcApplication.ViewModels"
     xmlns:converters="using:SfcApplication.Converters"
     xmlns:mappers="using:SfcApplication.Models.Mappers"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" 
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity">
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:media="using:CommunityToolkit.WinUI.UI.Media">
 
     <Page.DataContext>
         <viewmodel:FileListPageViewModel x:Name="ViewModel"></viewmodel:FileListPageViewModel>
@@ -20,17 +21,47 @@
     <Page.Resources>
         <MenuFlyout x:Key="FileListRightClickMenu" x:Name="FileListRightClickMenu">
             <MenuFlyoutItem 
+                x:Name="UploadBtn"
+                Text="上传"/>
+            <MenuFlyoutItem 
+                x:Name="CreateFolderBtn"
+                Click="CreateFolderBtn_OnClick"
+                Text="新建文件夹"/>
+            <MenuFlyoutItem 
+                x:Name="RefreshBtn"
+                Click="RefreshBtn_OnClick"
+                Text="刷新"/>
+            <MenuFlyoutItem 
                 x:Name="DownloadBtn"
                 Visibility="{x:Bind converters:VisibilityConverter.NoValueToHidden(ViewModel.SelectedDiskFileInfos) ,Mode=OneWay}"
                 Click="DownloadBtn_Click"
                 Text="下载"/>
             <MenuFlyoutItem 
-                x:Name="RefreshBtn"
-                Click="RefreshBtn_OnClick"
-                Text="刷新"/>
+                x:Name="CopyBtn"
+                Click="CopyBtn_OnClick"
+                Visibility="{x:Bind converters:VisibilityConverter.NoValueToHidden(ViewModel.SelectedDiskFileInfos) ,Mode=OneWay}"
+                Text="复制"/>
+            <MenuFlyoutItem 
+                x:Name="CutBtn"
+                Click="CutBtn_OnClick"
+                Visibility="{x:Bind converters:VisibilityConverter.NoValueToHidden(ViewModel.SelectedDiskFileInfos) ,Mode=OneWay}"
+                Text="剪切"/>
+            <MenuFlyoutItem 
+                x:Name="PasteBtn"
+                Click="PasteBtn_OnClick"
+                IsEnabled="False"
+                Text="粘贴"/>
+            <MenuFlyoutItem 
+                x:Name="ReNameBtn"
+                Visibility="{x:Bind converters:VisibilityConverter.OnlyOneValueCanShow(ViewModel.SelectedDiskFileInfos) ,Mode=OneWay}"
+                Text="重命名"/>
+            <MenuFlyoutItem 
+                x:Name="DeleteBtn"
+                Visibility="{x:Bind converters:VisibilityConverter.NoValueToHidden(ViewModel.SelectedDiskFileInfos) ,Mode=OneWay}"
+                Text="删除"/>
         </MenuFlyout>
     </Page.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -41,13 +72,27 @@
             x:Name="FileInfoGridView" 
             ItemsSource="{Binding DiskFileInfos}"  
             CanDragItems="True" 
+            AllowDrop="True"
+            DragEnter="FileInfoGridView_OnDragEnter"
+            DragLeave="FileInfoGridView_OnDragLeave"
+            Drop="FileInfoGridView_OnDrop"
+            DragItemsStarting="FileInfoGridView_OnDragItemsStarting"
+            DragItemsCompleted="FileInfoGridView_OnDragItemsCompleted"
             SelectionMode="Extended" 
             Grid.Row="1" 
             RightTapped="FileInfoGridView_RightTapped"
-            Tapped="FileInfoGridView_OnTapped">
+            Tapped="FileInfoGridView_OnTapped"
+            PointerPressed="FileInfoGridView_OnPointerPressed"
+            PointerMoved="FileInfoGridView_OnPointerMoved"
+            PointerReleased="FileInfoGridView_OnPointerReleased">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="mappers:DiskFileInfoMapper">
-                    <StackPanel Orientation="Vertical" Width="150" Height="150" Name="FileItemPanel" DoubleTapped="FileItemPanel_OnDoubleTapped">
+                    <StackPanel Orientation="Vertical" Width="150" Height="150"  Name="FileItemPanel" DoubleTapped="FileItemPanel_OnDoubleTapped"
+                                AllowDrop="True"
+                                DragEnter="FileItemPanel_DragEnter"
+                                DragLeave="FileItemPanel_DragLeave"
+                                Drop="FileItemPanel_OnDrop"
+                                PointerReleased="FileInfoGridView_OnPointerReleased">
                         <Image Stretch = 'UniformToFill'  
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
@@ -60,11 +105,28 @@
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
-            <Interactivity:Interaction.Behaviors>
-                <Core:EventTriggerBehavior EventName="SelectionChanged">
-                    <Core:InvokeCommandAction Command="{x:Bind ViewModel.SetSelectedDiskFileInfos}" CommandParameter="{x:Bind FileInfoGridView.SelectedItems,Mode=OneWay}"/>
-                </Core:EventTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="SelectionChanged">
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.SetSelectedDiskFileInfos}" CommandParameter="{x:Bind FileInfoGridView.SelectedItems,Mode=OneWay}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
         </GridView>
+        <Canvas Grid.Row="0" Grid.RowSpan="2" x:Name="SelectionCanvas"
+                PointerPressed="FileInfoGridView_OnPointerPressed"
+                PointerMoved="FileInfoGridView_OnPointerMoved"
+                PointerReleased="FileInfoGridView_OnPointerReleased">
+            <Border 
+                BorderBrush="Blue" 
+                BorderThickness="1"
+                Visibility="{Binding IsSelectionBorderShow}"
+                Width="{Binding SelectionBorderWidth}"
+                Height="{Binding SelectionBorderHeight}"
+                Canvas.Top="{Binding SelectionBorderPosY}"
+                Canvas.Left="{Binding SelectionBorderPosX}">
+                <Border.Background>
+                    <media:BackdropSepiaBrush Intensity="0.5"></media:BackdropSepiaBrush>
+                </Border.Background>
+            </Border>
+        </Canvas>
     </Grid>
 </extensions:RoutePage>

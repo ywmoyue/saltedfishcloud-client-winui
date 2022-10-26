@@ -4,6 +4,8 @@ using SfcApplication.Clients;
 using SfcApplication.Extensions;
 using SfcApplication.HostedServices;
 using SfcApplication.Models.Entities;
+using SfcApplication.Models.Mappers;
+using SfcApplication.Models.Requests;
 
 namespace SfcApplication.Services
 {
@@ -23,11 +25,11 @@ namespace SfcApplication.Services
             return await m_diskFileClient.GetFileList(path, userId, m_userHostedService.Token);
         }
 
-        public async Task<List<DiskFileInfo>> GetFolderSubFileList(List<string> paths,string fileName, int userId = 0)
+        public async Task<List<DiskFileInfo>> GetFolderSubFileList(List<string> paths, string fileName, int userId = 0)
         {
-            var path = paths.GetFileUrlExceptRoot() + fileName+'/';
-            var list= await m_diskFileClient.GetFileList(path, userId, m_userHostedService.Token);
-            var subList=new List<DiskFileInfo>();
+            var path = paths.GetFileUrlExceptRoot() + fileName + '/';
+            var list = await m_diskFileClient.GetFileList(path, userId, m_userHostedService.Token);
+            var subList = new List<DiskFileInfo>();
             paths.Add(fileName);
             for (var i = 0; i < list.Count; i++)
             {
@@ -44,6 +46,33 @@ namespace SfcApplication.Services
             }
             list.AddRange(subList);
             return list;
+        }
+
+        public async Task MoveFiles(List<DiskFileInfoMapper> files, DiskFileInfoMapper target, int targetUserId = 0, int sourceUserId = 0)
+        {
+            var request = new MoveFileRequest();
+            var targetPath = $"/{target.Paths.GetFileUrlExceptRoot()}{target.Name}";
+            request.TargetUid = targetUserId;
+            request.SourceUid = sourceUserId;
+            request.Files = new List<MoveFileRequestItem>();
+            foreach (var diskFileInfo in files)
+            {
+                var filePath = $"/{diskFileInfo.Paths.GetFileUrlExceptRoot()}{diskFileInfo.Name}";
+                var item = new MoveFileRequestItem()
+                {
+                    Source = filePath,
+                    Target = $"{targetPath}/{diskFileInfo.Name}"
+                };
+                request.Files.Add(item);
+            }
+
+            await m_diskFileClient.MoveFiles(request, targetUserId, m_userHostedService.Token);
+        }
+
+        public async Task CreateFolder(string name, List<string> Paths, int userId = 0)
+        {
+            var path = Paths.GetFileUrlExceptRoot();
+            await m_diskFileClient.CreateFolder(name, path, userId, m_userHostedService.Token);
         }
     }
 }

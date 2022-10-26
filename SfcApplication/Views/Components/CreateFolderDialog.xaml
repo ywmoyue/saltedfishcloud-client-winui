@@ -1,0 +1,28 @@
+﻿<ContentDialog
+    x:Class="SfcApplication.Views.Components.CreateFolderDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SfcApplication.Views.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="using:SfcApplication.ViewModels"
+    Title="新建文件夹"
+    PrimaryButtonText="确定"
+    CloseButtonText="取消"
+    PrimaryButtonClick="CreateFolderDialog_OnPrimaryButtonClick"
+    mc:Ignorable="d">
+    <ContentDialog.DataContext>
+        <viewmodel:CreateFolderDialogViewModel x:Name="ViewModel"></viewmodel:CreateFolderDialogViewModel>
+    </ContentDialog.DataContext>
+
+    <ContentDialog.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">名称</TextBlock>
+            <TextBox Grid.Column="1" Text="{Binding Name,Mode=TwoWay}"></TextBox>
+        </Grid>
+    </ContentDialog.Content>
+</ContentDialog>

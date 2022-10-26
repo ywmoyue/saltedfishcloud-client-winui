@@ -13,7 +13,12 @@ using System.Threading.Tasks;
 using SfcApplication.HostedServices;
 using Downloader;
 using Windows.Storage;
+using Flurl.Http;
+using Flurl.Http.Configuration;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using SfcApplication.Views.Components;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -51,6 +56,9 @@ namespace SfcApplication
                 if (!Directory.Exists(localConfigPath)) Directory.CreateDirectory(localConfigPath);
                 File.Copy($"{packagePath}/appsettings.template.json",m_configurationPath);
             }
+#if DEBUG
+            File.Copy($"{packagePath}/appsettings.template.json", m_configurationPath, true);
+#endif
             var builder = new ConfigurationBuilder()
                 .SetBasePath(localConfigPath)
                 .AddJsonFile("appsettings.json", optional: false);
@@ -63,6 +71,7 @@ namespace SfcApplication
             clientConfig.ConfigPath = m_configurationPath;
             var downloadConfig = m_configuration.GetSection(nameof(DownloadConfiguration)).Get<DownloadConfiguration>();
             var userConfig = m_configuration.GetSection(nameof(UserConfig)).Get<UserConfig>();
+            ConfigureHttp();
             services.AddSingleton(m_configuration);
             services.AddSingleton(clientConfig);
             services.AddSingleton(downloadConfig);
@@ -77,6 +86,7 @@ namespace SfcApplication
             services.AddSingleton<ToastService>();
             services.AddSingleton<ConfigService>();
             services.AddScoped<LocalFileIOService>();
+            services.AddScoped<CreateFolderDialog>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<FileListPage>();
             services.AddSingleton<LoginPage>();
@@ -87,6 +97,20 @@ namespace SfcApplication
             services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<DownloadHostedService>());
             services.AddSingleton<UserHostedService>();
             services.AddHostedService((serviceProvider) => serviceProvider.GetRequiredService<UserHostedService>());
+        }
+
+        private void ConfigureHttp()
+        {
+            FlurlHttp.Configure(settings =>
+            {
+                var jsonSettings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    ObjectCreationHandling = ObjectCreationHandling.Replace,
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+                settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
+            });
         }
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)

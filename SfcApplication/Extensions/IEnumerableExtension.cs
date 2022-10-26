@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace SfcApplication.Extensions
@@ -23,6 +24,14 @@ namespace SfcApplication.Extensions
                 path += $"{filePaths.ElementAt(i)}\\";
             }
             return path;
+        }
+
+        public static void RemoveRange<T>(this ObservableCollection<T> source, IEnumerable<T> removeList)
+        {
+            foreach (var item in removeList)
+            {
+                source.Remove(item);
+            }
         }
     }
 }

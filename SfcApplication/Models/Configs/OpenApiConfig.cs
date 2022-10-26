@@ -10,5 +10,7 @@ namespace SfcApplication.Models.Configs
         public string GetFileList { get; set; }
         public string GetThumbnailImage { get; set; }
         public string GetUserAvatarImage { get; set; }
+        public string MoveFiles { get; set; }
+        public string CreateFolder { get; set; }
     }
 }
