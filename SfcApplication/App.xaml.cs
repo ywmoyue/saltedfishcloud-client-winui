@@ -88,6 +88,7 @@ namespace SfcApplication
             services.AddSingleton<ToastService>();
             services.AddSingleton<ConfigService>();
             services.AddScoped<LocalFileIOService>();
+            services.AddTransient<ConfirmDialog>();
             services.AddTransient<CreateFolderDialog>();
             services.AddTransient<RenameFileDialog>();
             services.AddSingleton<MainWindow>();

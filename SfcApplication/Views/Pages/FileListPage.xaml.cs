@@ -388,5 +388,16 @@ namespace SfcApplication.Views.Pages
                 file.Name = dialog.NewName;
             }
         }
+
+        private async void DeleteBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var fileList = ViewModel.SelectedDiskFileInfos.ToList();
+            if(!fileList.Any()) return;
+            var fileNameList = fileList.Select(x => x.Name).ToList();
+            var confirm = await m_toastService.Confirm("即将删除以下文件", string.Join(',', fileNameList));
+            if (!confirm) return;
+            await m_diskFileService.DeleteFile(fileNameList, ViewModel.Paths.ToList(), ViewModel.UserId);
+            ViewModel.DiskFileInfos.RemoveRange(fileList);
+        }
     }
 }

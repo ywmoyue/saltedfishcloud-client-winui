@@ -95,5 +95,23 @@ namespace SfcApplication.Clients
 
             }
         }
+
+        public async Task DeleteFile(DeleteFileRequest request, string path = "", int userId = 0,
+            string token = null)
+        {
+            try
+            {
+                var url = m_clientConfig.BaseUrl + m_clientConfig.OpenApi.DeleteFile
+                    .ReplaceParameter("userId", userId + "").ReplaceParameter("path", path);
+                var result = await url
+                    .WithHeader("Token", token)
+                    .SendJsonAsync(HttpMethod.Delete, request)
+                    .ReceiveJson<BaseBean>();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
 }

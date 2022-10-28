@@ -58,6 +58,7 @@
                 Text="重命名"/>
             <MenuFlyoutItem 
                 x:Name="DeleteBtn"
+                Click="DeleteBtn_OnClick"
                 Visibility="{x:Bind converters:VisibilityConverter.NoValueToHidden(ViewModel.SelectedDiskFileInfos) ,Mode=OneWay}"
                 Text="删除"/>
         </MenuFlyout>

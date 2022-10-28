@@ -86,5 +86,15 @@ namespace SfcApplication.Services
             };
             await m_diskFileClient.RenameFile(request, path, userId, m_userHostedService.Token);
         }
+
+        public async Task DeleteFile(List<string> fileNames, List<string> Paths, int userId = 0)
+        {
+            var path = Paths.GetFileUrlExceptRoot();
+            var request = new DeleteFileRequest()
+            {
+                FileNames = fileNames
+            };
+            await m_diskFileClient.DeleteFile(request, path, userId, m_userHostedService.Token);
+        }
     }
 }

@@ -12,6 +12,7 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\Components\ConfirmDialog.xaml" />
     <None Remove="Views\Components\CreateFolderDialog.xaml" />
     <None Remove="Views\Components\DownloadedView.xaml" />
     <None Remove="Views\Components\DownloadingView.xaml" />
@@ -66,6 +67,9 @@
     <None Update="appsettings.template.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Components\ConfirmDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\RenameFileDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
