@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using SfcApplication.Clients;
 using SfcApplication.Extensions;
 using SfcApplication.HostedServices;
@@ -73,6 +74,17 @@ namespace SfcApplication.Services
         {
             var path = Paths.GetFileUrlExceptRoot();
             await m_diskFileClient.CreateFolder(name, path, userId, m_userHostedService.Token);
+        }
+
+        public async Task RenameFile(string oldName, string newName, List<string> Paths, int userId = 0)
+        {
+            var path = Paths.GetFileUrlExceptRoot();
+            var request = new RenameFileRequest()
+            {
+                OldName = oldName,
+                NewName = newName
+            };
+            await m_diskFileClient.RenameFile(request, path, userId, m_userHostedService.Token);
         }
     }
 }

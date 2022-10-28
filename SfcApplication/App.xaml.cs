@@ -18,7 +18,9 @@ using Flurl.Http.Configuration;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using SfcApplication.Extensions;
 using SfcApplication.Views.Components;
+using NullValueHandling = Newtonsoft.Json.NullValueHandling;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -86,7 +88,8 @@ namespace SfcApplication
             services.AddSingleton<ToastService>();
             services.AddSingleton<ConfigService>();
             services.AddScoped<LocalFileIOService>();
-            services.AddScoped<CreateFolderDialog>();
+            services.AddTransient<CreateFolderDialog>();
+            services.AddTransient<RenameFileDialog>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<FileListPage>();
             services.AddSingleton<LoginPage>();
@@ -110,6 +113,7 @@ namespace SfcApplication
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 };
                 settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
+                settings.UrlEncodedSerializer = new DataContractUrlEncodedSerializer();
             });
         }
 
@@ -128,6 +132,5 @@ namespace SfcApplication
             await services.GetRequiredService<DownloadHostedService>().StartAsync(System.Threading.CancellationToken.None);
             await services.GetRequiredService<UserHostedService>().StartAsync(System.Threading.CancellationToken.None);
         }
-
     }
 }

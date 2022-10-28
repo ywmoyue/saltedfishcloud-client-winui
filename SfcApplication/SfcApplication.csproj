@@ -15,6 +15,7 @@
     <None Remove="Views\Components\CreateFolderDialog.xaml" />
     <None Remove="Views\Components\DownloadedView.xaml" />
     <None Remove="Views\Components\DownloadingView.xaml" />
+    <None Remove="Views\Components\RenameFileDialog.xaml" />
     <None Remove="Views\DownloadPage.xaml" />
     <None Remove="Views\FileListPage.xaml" />
     <None Remove="Views\HomePage.xaml" />
@@ -65,6 +66,9 @@
     <None Update="appsettings.template.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Components\RenameFileDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\CreateFolderDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

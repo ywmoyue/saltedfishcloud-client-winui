@@ -77,5 +77,23 @@ namespace SfcApplication.Clients
 
             }
         }
+
+        public async Task RenameFile(RenameFileRequest request, string path = "", int userId = 0,
+            string token = null)
+        {
+            try
+            {
+                var url = m_clientConfig.BaseUrl + m_clientConfig.OpenApi.RenameFile
+                    .ReplaceParameter("userId", userId + "").ReplaceParameter("path", path);
+                var result = await url
+                    .WithHeader("Token", token)
+                    .SendUrlEncodedAsync(HttpMethod.Put, request)
+                    .ReceiveJson<BaseBean>();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
 }

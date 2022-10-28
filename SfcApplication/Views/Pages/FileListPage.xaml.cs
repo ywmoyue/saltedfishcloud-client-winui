@@ -18,6 +18,7 @@ using SfcApplication.HostedServices;
 using SfcApplication.Models.Common;
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.Extensions.DependencyInjection;
+using SfcApplication.ViewModels;
 using SfcApplication.Views.Components;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -81,14 +82,14 @@ namespace SfcApplication.Views.Pages
         {
             var path = ViewModel.Paths.GetFileUrlExceptRoot();
             var diskFileInfos = await m_diskFileService.GetFileList(path, ViewModel.UserId);
-            var mappers = m_mapper.Map<List<DiskFileInfoMapper>>(diskFileInfos);
+            var mappers = m_mapper.Map<List<DiskFileInfoMapperViewModel>>(diskFileInfos);
             mappers.ForEach(x =>
             {
                 x.Paths = ViewModel.Paths.ToList();
                 x.BaseUrl = m_config.BaseUrl + m_config.OpenApi.GetThumbnailImage;
                 x.UserId = ViewModel.UserId;
             });
-            ViewModel.DiskFileInfos = new ObservableCollection<DiskFileInfoMapper>(mappers);
+            ViewModel.DiskFileInfos = new ObservableCollection<DiskFileInfoMapperViewModel>(mappers);
         }
 
         private void InitPaths()
@@ -102,7 +103,7 @@ namespace SfcApplication.Views.Pages
         {
             var originalSource = sender as FrameworkElement;
 
-            var fileInfo = originalSource.DataContext as DiskFileInfoMapper;
+            var fileInfo = originalSource.DataContext as DiskFileInfoMapperViewModel;
             if (fileInfo.Dir)
             {
                 ViewModel.Paths.Add(fileInfo.Name);
@@ -125,7 +126,7 @@ namespace SfcApplication.Views.Pages
             if (ViewModel.SelectedDiskFileInfos == null || !ViewModel.SelectedDiskFileInfos.Any())
             {
                 var originalSource = e.OriginalSource as FrameworkElement;
-                var fileInfo = originalSource.DataContext as DiskFileInfoMapper;
+                var fileInfo = originalSource.DataContext as DiskFileInfoMapperViewModel;
                 if (fileInfo != null)
                 {
                     FileInfoGridView.SelectedItems.Add(fileInfo);
@@ -137,7 +138,9 @@ namespace SfcApplication.Views.Pages
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var fileInfo in ViewModel.SelectedDiskFileInfos)
+            var selectedFileViewModelList = ViewModel.SelectedDiskFileInfos;
+            var selectedFileList = m_mapper.Map<List<DiskFileInfoMapper>>(selectedFileViewModelList);
+            foreach (var fileInfo in selectedFileList)
             {
                 if (!fileInfo.Dir)
                 {
@@ -162,7 +165,7 @@ namespace SfcApplication.Views.Pages
         private void FileInfoGridView_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             var originalSource = e.OriginalSource as FrameworkElement;
-            var fileInfo = originalSource.DataContext as DiskFileInfoMapper;
+            var fileInfo = originalSource.DataContext as DiskFileInfoMapperViewModel;
             if (fileInfo == null)
             {
                 FileInfoGridView.SelectedItems.Clear();
@@ -212,7 +215,7 @@ namespace SfcApplication.Views.Pages
                 if (isIntersect)
                 {
                     var fileElement = fileBox as GridViewItem;
-                    var fileInfo = fileElement.Content as DiskFileInfoMapper;
+                    var fileInfo = fileElement.Content as DiskFileInfoMapperViewModel;
                     var index = FileInfoGridView.SelectedItems.IndexOf(fileInfo);
                     if (index < 0)
                     {
@@ -222,7 +225,7 @@ namespace SfcApplication.Views.Pages
                 else
                 {
                     var fileElement = fileBox as GridViewItem;
-                    var fileInfo = fileElement.Content as DiskFileInfoMapper;
+                    var fileInfo = fileElement.Content as DiskFileInfoMapperViewModel;
                     FileInfoGridView.SelectedItems.Remove(fileInfo);
                 }
             }
@@ -244,7 +247,7 @@ namespace SfcApplication.Views.Pages
         private async void FileItemPanel_DragEnter(object sender, DragEventArgs e)
         {
             var element = sender as FrameworkElement;
-            var fileInfo = element.DataContext as DiskFileInfoMapper;
+            var fileInfo = element.DataContext as DiskFileInfoMapperViewModel;
             if (!fileInfo.Dir) return;
             if (ViewModel.DraggingDiskFileInfos != null &&
                 ViewModel.DraggingDiskFileInfos.Exists(x => x.Md5 == fileInfo.Md5)) return;
@@ -278,22 +281,24 @@ namespace SfcApplication.Views.Pages
         private async void FileItemPanel_OnDrop(object sender, DragEventArgs e)
         {
             var element = sender as FrameworkElement;
-            var fileInfo = element.DataContext as DiskFileInfoMapper; 
+            var fileInfoViewModel = element.DataContext as DiskFileInfoMapperViewModel;
+            var fileInfo = m_mapper.Map<DiskFileInfoMapper>(fileInfoViewModel);
             if (!fileInfo.Dir) return;
             if (ViewModel.DraggingDiskFileInfos != null &&
                 ViewModel.DraggingDiskFileInfos.Exists(x => x.Md5 == fileInfo.Md5)) return;
             if (ViewModel.DraggingDiskFileInfos != null&&ViewModel.DraggingDiskFileInfos.Any())
             {
-                var fileList = ViewModel.DraggingDiskFileInfos;
-                await m_diskFileService.MoveFiles(ViewModel.DraggingDiskFileInfos, fileInfo, ViewModel.UserId,
+                var fileViewModelList = ViewModel.DraggingDiskFileInfos;
+                var fileList = m_mapper.Map<List<DiskFileInfoMapper>>(fileViewModelList);
+                await m_diskFileService.MoveFiles(fileList, fileInfo, ViewModel.UserId,
                     ViewModel.UserId);
-                ViewModel.DiskFileInfos.RemoveRange(fileList);
+                ViewModel.DiskFileInfos.RemoveRange(fileViewModelList);
             }
         }
 
         private void FileInfoGridView_OnDragItemsStarting(object sender, DragItemsStartingEventArgs e)
         {
-            ViewModel.DraggingDiskFileInfos = e.Items.Cast<DiskFileInfoMapper>().ToList();
+            ViewModel.DraggingDiskFileInfos = e.Items.Cast<DiskFileInfoMapperViewModel>().ToList();
         }
 
         private void FileInfoGridView_OnDragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
@@ -361,9 +366,26 @@ namespace SfcApplication.Views.Pages
             dialog.Paths = ViewModel.Paths.ToList();
             dialog.UserId = ViewModel.UserId;
             await dialog.ShowAsync();
-            if (dialog.IsCreated)
+            if (dialog.IsOk)
             {
                 await this.InitData();
+            }
+        }
+
+        private async void ReNameBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var fileInfo= ViewModel.SelectedDiskFileInfos.FirstOrDefault();
+            if (fileInfo == null) return;
+            var dialog = m_serviceProvider.GetRequiredService<RenameFileDialog>();
+            dialog.XamlRoot = this.XamlRoot;
+            dialog.Paths = ViewModel.Paths.ToList();
+            dialog.UserId = ViewModel.UserId;
+            dialog.OldName = fileInfo.Name;
+            await dialog.ShowAsync();
+            if (dialog.IsOk)
+            {
+                var file = ViewModel.DiskFileInfos.FirstOrDefault(x => x.Md5 == fileInfo.Md5);
+                file.Name = dialog.NewName;
             }
         }
     }

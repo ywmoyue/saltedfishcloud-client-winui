@@ -54,6 +54,7 @@
             <MenuFlyoutItem 
                 x:Name="ReNameBtn"
                 Visibility="{x:Bind converters:VisibilityConverter.OnlyOneValueCanShow(ViewModel.SelectedDiskFileInfos) ,Mode=OneWay}"
+                Click="ReNameBtn_OnClick"
                 Text="重命名"/>
             <MenuFlyoutItem 
                 x:Name="DeleteBtn"
@@ -86,7 +87,7 @@
             PointerMoved="FileInfoGridView_OnPointerMoved"
             PointerReleased="FileInfoGridView_OnPointerReleased">
             <GridView.ItemTemplate>
-                <DataTemplate x:DataType="mappers:DiskFileInfoMapper">
+                <DataTemplate x:DataType="viewmodel:DiskFileInfoMapperViewModel">
                     <StackPanel Orientation="Vertical" Width="150" Height="150"  Name="FileItemPanel" DoubleTapped="FileItemPanel_OnDoubleTapped"
                                 AllowDrop="True"
                                 DragEnter="FileItemPanel_DragEnter"
@@ -101,7 +102,7 @@
                                AutomationProperties.AccessibilityView = 'Raw'>
 
                         </Image>
-                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock Text="{Binding Name,Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"></TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>

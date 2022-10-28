@@ -11,12 +11,12 @@ namespace SfcApplication.ViewModels
 {
     public class FileListPageViewModel : BaseViewModel
     {
-        public ObservableCollection<DiskFileInfoMapper> DiskFileInfos { get; set; }
+        public ObservableCollection<DiskFileInfoMapperViewModel> DiskFileInfos { get; set; }
 
         public ObservableCollection<string> Paths { get; set; }
 
-        public ObservableCollection<DiskFileInfoMapper> SelectedDiskFileInfos { get; set; }
-        public List<DiskFileInfoMapper> DraggingDiskFileInfos { get; set; }
+        public ObservableCollection<DiskFileInfoMapperViewModel> SelectedDiskFileInfos { get; set; }
+        public List<DiskFileInfoMapperViewModel> DraggingDiskFileInfos { get; set; }
 
         public bool IsSelectionBorderShow { get; set; }
         public Point SelectionBorderMouseSourcePoint { get; set; }
@@ -46,14 +46,14 @@ namespace SfcApplication.ViewModels
             get
             {
                 return new SelectedCommand((s) => 
-                    SelectedDiskFileInfos=new ObservableCollection<DiskFileInfoMapper>(s)
+                    SelectedDiskFileInfos=new ObservableCollection<DiskFileInfoMapperViewModel>(s)
                 );
             }
         }
         public class SelectedCommand : ICommand
         {
             public event EventHandler CanExecuteChanged;
-            public Action<IEnumerable<DiskFileInfoMapper>> m_action;
+            public Action<IEnumerable<DiskFileInfoMapperViewModel>> m_action;
             public bool CanExecute(object parameter)
             {
                 return true;
@@ -62,10 +62,10 @@ namespace SfcApplication.ViewModels
             public void Execute(object parameter)
             {
                 var source=parameter as IEnumerable<object>;
-                m_action(source.Cast<DiskFileInfoMapper>());
+                m_action(source.Cast<DiskFileInfoMapperViewModel>());
             }
 
-            public SelectedCommand(Action<IEnumerable<DiskFileInfoMapper>> action)
+            public SelectedCommand(Action<IEnumerable<DiskFileInfoMapperViewModel>> action)
             {
                 this.m_action = action;
             }
